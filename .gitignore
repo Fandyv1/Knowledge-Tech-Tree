@@ -3,6 +3,9 @@
 .box-agent-scratch/
 .playwright-mcp/
 
+# QA 截图（本地验证产物，不入库）
+qa-*.png
+
 # 依赖
 node_modules/
 __pycache__/
@@ -14,8 +17,7 @@ venv/
 dist/
 build/
 *.egg-info/
-*.o
-*.ali
+*.tsbuildinfo
 
 # 环境与密钥
 .env
