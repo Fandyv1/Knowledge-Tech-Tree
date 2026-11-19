@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --node-w: 190px;
+    --node-h: 68px;
+    --enter-stagger: 110ms;
+    --enter-duration: 420ms;
+    --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-ink-900 antialiased;
+    font-family:
+      system-ui,
+      'PingFang SC',
+      'Microsoft YaHei',
+      'Hiragino Sans GB',
+      sans-serif;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-sky-500/70;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply rounded-xl border border-line bg-white shadow-card;
+  }
+
+  .pill-button {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white
+      px-3 py-1.5 text-sm text-ink-700 transition-colors duration-150
+      hover:border-sky-300 hover:text-sky-700;
+  }
+
+  .ghost-button {
+    @apply inline-flex items-center gap-1.5 rounded-lg border border-line bg-white
+      px-3 py-2 text-sm text-ink-700 transition-colors duration-150
+      hover:border-sky-300 hover:text-sky-700 disabled:opacity-50;
+  }
+
+  .icon-button {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-lg border
+      border-line bg-white text-ink-500 transition-colors duration-150
+      hover:border-sky-300 hover:text-sky-700;
+  }
+}
+
+/* ---------- 首页：空输入抖动 ---------- */
+@keyframes shake-x {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+.animate-shake {
+  animation: shake-x 420ms var(--ease-out);
+}
+
+/* ---------- 通用淡入 ---------- */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-rise {
+  animation: fade-rise 280ms var(--ease-out) both;
+}
+
+/* ---------- 科技树：节点入场 ---------- */
+@keyframes node-emerge {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tree-entering .ktt-node {
+  animation: node-emerge var(--enter-duration) var(--ease-out) both;
+  animation-delay: calc(var(--depth, 0) * var(--enter-stagger));
+}
+
+/* 连线在节点开始浮现后统一绘制，避免出现"线先到、节点后到" */
+@keyframes edge-draw {
+  from {
+    stroke-dashoffset: 800;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.tree-entering .react-flow__edge-path {
+  stroke-dasharray: 800;
+  animation: edge-draw 900ms var(--ease-out) both;
+  animation-delay: 220ms;
+}
+
+/* ---------- 科技树：节点与连线状态 ---------- */
+.ktt-node {
+  width: var(--node-w);
+  height: var(--node-h);
+  @apply relative flex cursor-pointer select-none items-center overflow-hidden
+    rounded-xl border bg-white text-left shadow-card;
+  transition:
+    opacity 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.ktt-node:hover {
+  @apply shadow-hover;
+}
+
+.ktt-node[data-dimmed='true'] {
+  opacity: 0.35;
+}
+
+.ktt-node[data-selected='true'] {
+  box-shadow:
+    0 0 0 2px var(--accent, #0ea5e9),
+    0 8px 24px -8px rgba(15, 23, 42, 0.18);
+}
+
+.ktt-node__bar {
+  @apply absolute inset-y-0 left-0 w-1.5;
+}
+
+.react-flow__edge-path {
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+  transition:
+    stroke 180ms ease,
+    opacity 180ms ease,
+    stroke-width 180ms ease;
+}
+
+.react-flow__edge.ktt-edge-active .react-flow__edge-path {
+  stroke: #f59e0b;
+  stroke-width: 2.4;
+}
+
+.react-flow__edge.ktt-edge-faded .react-flow__edge-path {
+  opacity: 0.25;
+}
+
+.react-flow__node:focus,
+.react-flow__node:focus-visible {
+  outline: none;
+}
+
+.react-flow__attribution {
+  @apply text-[10px];
+}
+
+/* ---------- 可访问性：减少动画 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --enter-stagger: 24ms;
+    --enter-duration: 160ms;
+  }
+
+  .animate-shake,
+  .animate-fade-rise {
+    animation-duration: 120ms;
+  }
+
+  .tree-entering .react-flow__edge-path {
+    stroke-dasharray: none;
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
