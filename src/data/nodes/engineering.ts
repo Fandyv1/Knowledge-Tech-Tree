@@ -1,0 +1,193 @@
+import type { KnowledgeNode } from '../../types';
+
+/** 工程化与实践层 */
+export const engineeringNodes: KnowledgeNode[] = [
+  {
+    id: 'data-pipeline',
+    title: '数据工程与清洗',
+    category: 'engineering',
+    summary: '采集、解析、去重、过滤与配比，决定训练数据的质量上限。',
+    why: '数据质量常比模型结构更影响效果。',
+    description: [
+      '大模型训练中最脏最累但回报最高的工作就是数据工程。业界共识是：在架构趋同的今天，模型之间的差距主要来自数据。垃圾进、垃圾出这条老规律，在万亿 token 规模下被放大到了极致。',
+      '完整流程包括：多源采集（网页、书籍、代码、对话）、格式解析与正文抽取、语言识别与质量打分、规则过滤（长度、符号比例、重复率）、模型打分过滤、精确去重与近似去重（MinHash / SimHash）、有害内容与隐私信息清除、评测集污染检查、以及领域配比设计。',
+      '其中近似去重与污染检查最容易被忽视却后果严重。重复数据会让模型过度记忆、浪费算力；而训练集若混入评测集内容，所有指标都将失去意义——这是很多“刷榜”模型实际表现落差的根源。',
+    ],
+    purposes: [
+      '构建可复现的训练数据处理流水线',
+      '通过去重与质量过滤提升数据有效性',
+      '检查并避免评测集污染',
+      '设计多领域数据配比与采样权重',
+      '为 RAG 知识库准备结构化、可检索的语料',
+    ],
+    resources: [
+      {
+        title: 'The Pile: An 800GB Dataset of Diverse Text',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2101.00027',
+        note: '开源大规模语料的构建思路与配比设计。',
+      },
+      {
+        title: 'The RefinedWeb Dataset for Falcon LLM',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2306.01116',
+        note: '论证精细过滤的网页数据可媲美精选语料。',
+      },
+      {
+        title: 'Deduplicating Training Data Makes Language Models Better',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2107.06499',
+        note: '量化去重对模型效果与训练效率的影响。',
+      },
+      {
+        title: 'Hugging Face Datasets 文档',
+        type: 'doc',
+        url: 'https://huggingface.co/docs/datasets/index',
+        note: '大规模数据集的加载、流式处理与变换工具。',
+      },
+    ],
+    zhihuKeywords: ['大模型 训练数据 清洗 流程', '数据去重 MinHash 原理'],
+    prerequisites: ['python'],
+  },
+  {
+    id: 'inference-opt',
+    title: '推理优化',
+    category: 'engineering',
+    summary: '量化、KV Cache 管理、批处理与算子优化，降低延迟与成本。',
+    why: '决定模型能否以可接受的成本上线。',
+    description: [
+      '训练是一次性投入，推理是持续性成本。一个模型上线后，99% 的算力消耗发生在推理阶段。推理优化的目标很具体：在可接受的质量损失下，把延迟和单位 token 成本压到最低。',
+      '主要技术路线分几类。显存与带宽侧：权重量化（INT8、INT4、GPTQ、AWQ）、KV Cache 量化与 PagedAttention 分页管理。计算侧：FlashAttention 通过算子融合减少显存读写、算子融合与图优化、投机解码（speculative decoding）用小模型草拟、大模型验证。吞吐侧：连续批处理（continuous batching）、张量并行切分大模型。',
+      '需要清楚区分两类场景的优化目标：在线交互关注首 token 延迟（TTFT）与逐 token 延迟（TPOT），离线批处理关注总吞吐。两者的最优配置往往相反——批大小、并行策略都要分别调优。vLLM、TensorRT-LLM、SGLang 是当前主流的工程落地方案。',
+    ],
+    purposes: [
+      '降低推理延迟与单位 token 成本',
+      '通过量化让大模型在有限显存上运行',
+      '用连续批处理提升服务吞吐量',
+      '针对在线与离线场景分别调优配置',
+      '评估量化带来的精度损失是否可接受',
+    ],
+    resources: [
+      {
+        title: 'FlashAttention: Fast and Memory-Efficient Exact Attention',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2205.14135',
+        note: 'IO 感知的注意力实现，已成为事实标准。',
+      },
+      {
+        title: 'Efficient Memory Management for LLM Serving with PagedAttention',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2309.06180',
+        note: 'vLLM 论文，KV Cache 分页管理的核心思想。',
+      },
+      {
+        title: 'vLLM 文档',
+        type: 'doc',
+        url: 'https://docs.vllm.ai/en/latest/',
+        note: '高吞吐推理引擎，部署实践的主流选择。',
+      },
+      {
+        title: 'GPTQ: Accurate Post-Training Quantization',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2210.17323',
+        note: '训练后量化的代表方法。',
+      },
+    ],
+    zhihuKeywords: ['大模型 推理优化 方法', 'vLLM PagedAttention 原理'],
+    prerequisites: ['transformer', 'pytorch'],
+  },
+  {
+    id: 'evaluation',
+    title: '评测与安全',
+    category: 'practice',
+    summary: '构建可信评测体系，并识别越狱、注入与幻觉等风险。',
+    why: '没有可靠评测，所有优化都是盲目的。',
+    description: [
+      '大模型评测的根本困难在于开放式生成没有唯一正确答案。于是形成了多层体系：客观选择题基准（MMLU、C-Eval）、代码执行验证（HumanEval）、人类偏好对战（Chatbot Arena）、以及用强模型充当裁判的自动评测（LLM-as-a-judge）。每种方法都有偏差，必须组合使用。',
+      '更重要的是针对自身业务建立私有评测集。公开基准容易被污染和过拟合，而业务评测集只要规模适中、标注一致、定期更新，就能真实反映迭代效果。建议把它当作回归测试套件纳入 CI 流程。',
+      '安全维度需要系统性对待：提示注入（外部内容劫持指令）、越狱（绕过安全策略）、有害内容生成、训练数据泄露、以及幻觉。防御手段包括输入输出过滤、权限最小化、工具调用沙箱、人工确认节点与红队测试。需要明确的是：把外部内容当作数据而非指令，是防御提示注入的基本原则。',
+    ],
+    purposes: [
+      '建立覆盖业务场景的私有评测集',
+      '用多维度指标判断模型迭代是否真的进步',
+      '识别并防御提示注入与越狱攻击',
+      '量化并降低幻觉发生率',
+      '把评测纳入持续集成，防止能力回退',
+    ],
+    resources: [
+      {
+        title: 'Measuring Massive Multitask Language Understanding',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2009.03300',
+        note: 'MMLU 基准论文，最广泛引用的知识评测。',
+      },
+      {
+        title: 'Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2306.05685',
+        note: '系统分析模型裁判的可靠性与偏差。',
+      },
+      {
+        title: 'OWASP Top 10 for LLM Applications',
+        type: 'doc',
+        url: 'https://genai.owasp.org/llm-top-10/',
+        note: '大模型应用安全风险清单，工程落地必读。',
+      },
+      {
+        title: 'Survey of Hallucination in Natural Language Generation',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2202.03629',
+        note: '幻觉成因与缓解方法的系统综述。',
+      },
+    ],
+    zhihuKeywords: ['大模型 评测 benchmark 可信度', '提示注入 攻击 防御'],
+    prerequisites: ['sft', 'prompt-engineering'],
+  },
+  {
+    id: 'deployment',
+    title: '服务化部署',
+    category: 'engineering',
+    summary: '把模型封装为稳定可观测的线上服务，覆盖扩缩容与成本控制。',
+    why: '模型只有上线并稳定运行才产生价值。',
+    description: [
+      '从“能跑通的脚本”到“能承载真实流量的服务”，中间是一整套系统工程。需要解决接口设计、并发与排队、流式返回、超时与重试、灰度发布、监控告警、成本归因等问题，这些都不是模型本身的问题。',
+      '关键技术点：OpenAI 兼容的 API 接口规范（便于客户端复用生态）、流式输出（SSE 或 WebSocket）以降低用户感知延迟、GPU 资源调度与容器化部署、基于队列深度的自动扩缩容、多模型路由与降级策略、以及请求级别的可观测性（延迟分解、token 统计、错误率）。',
+      '成本控制是长期运营的核心命题。常用手段包括：按任务难度路由到不同规格模型、提示缓存复用相同前缀、结果缓存处理重复查询、以及离线任务错峰执行。建议从第一天就建立 token 级别的成本监控，否则很容易在规模化后失控。',
+    ],
+    purposes: [
+      '把模型封装为高可用的线上 API 服务',
+      '实现流式输出以改善用户体验',
+      '设计自动扩缩容与多模型降级策略',
+      '建立延迟、吞吐与成本的监控体系',
+      '通过路由与缓存策略优化运营成本',
+    ],
+    resources: [
+      {
+        title: 'vLLM · OpenAI 兼容服务部署',
+        type: 'doc',
+        url: 'https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html',
+        note: '一条命令起一个兼容 OpenAI 协议的推理服务。',
+      },
+      {
+        title: 'NVIDIA Triton Inference Server 文档',
+        type: 'doc',
+        url: 'https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/index.html',
+        note: '工业级推理服务框架，支持多模型与动态批处理。',
+      },
+      {
+        title: 'Ray Serve 文档',
+        type: 'doc',
+        url: 'https://docs.ray.io/en/latest/serve/index.html',
+        note: '分布式模型服务编排，适合多模型组合场景。',
+      },
+      {
+        title: 'Hugging Face Text Generation Inference',
+        type: 'doc',
+        url: 'https://huggingface.co/docs/text-generation-inference/index',
+        note: '生产级文本生成服务，内置流式与批处理优化。',
+      },
+    ],
+    zhihuKeywords: ['大模型 部署 方案 对比', '大模型 推理 成本 优化'],
+    prerequisites: ['inference-opt', 'data-pipeline'],
+  },
+];

@@ -1,0 +1,187 @@
+import type { KnowledgeNode } from '../../types';
+
+/** 大模型核心层（上）：架构与预训练 */
+export const llmArchitectureNodes: KnowledgeNode[] = [
+  {
+    id: 'attention',
+    title: '注意力机制',
+    category: 'llm-core',
+    summary: 'Query-Key-Value 的加权求和，让模型动态聚焦相关信息。',
+    why: 'Transformer 的核心计算单元。',
+    description: [
+      '注意力机制回答了一个具体问题：处理“它”这个词时，模型应该参考句子里的哪些词？传统 RNN 只能顺序传递信息，距离越远衰减越厉害；注意力机制让任意两个位置直接相连，距离不再是障碍。',
+      '机制本身可以用一句话概括：把输入投影成 Query、Key、Value 三组向量，用 Query 和所有 Key 做内积得到相似度分数，缩放后经 softmax 变成权重，再用这个权重对 Value 加权求和。其中除以根号 d_k 的缩放不是装饰——它防止维度升高时内积方差过大导致 softmax 饱和、梯度消失。',
+      '进阶需要理解：多头注意力为什么有效（在不同子空间并行建模不同关系）、自注意力与交叉注意力的区别、因果掩码如何保证自回归生成不偷看未来、以及注意力复杂度为序列长度平方这一根本瓶颈——它是后续所有长上下文优化工作的起点。',
+    ],
+    purposes: [
+      '理解 Transformer 每一层究竟在计算什么',
+      '理解多头注意力的参数量与计算量构成',
+      '理解因果掩码与自回归生成的关系',
+      '分析长上下文场景下的显存与算力瓶颈',
+      '为理解 FlashAttention 等优化方案做准备',
+    ],
+    resources: [
+      {
+        title: 'Attention Is All You Need',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/1706.03762',
+        note: '原始论文，第 3.2 节是注意力机制的权威定义。',
+      },
+      {
+        title: 'The Illustrated Transformer',
+        type: 'article',
+        url: 'https://jalammar.github.io/illustrated-transformer/',
+        note: 'Jay Alammar 的图解长文，理解注意力的最佳辅助材料。',
+      },
+      {
+        title: 'Visualizing Attention, a Transformer\'s Heart',
+        type: 'video',
+        url: 'https://www.3blue1brown.com/lessons/attention',
+        note: '3Blue1Brown 的可视化讲解，几何直觉清晰。',
+      },
+    ],
+    zhihuKeywords: ['注意力机制 原理 详解', '为什么 注意力 除以 根号dk'],
+    prerequisites: ['neural-net', 'linear-algebra'],
+  },
+  {
+    id: 'tokenization',
+    title: '分词与 Tokenizer',
+    category: 'llm-core',
+    summary: 'BPE 等子词算法把文本切成 token，决定模型的输入粒度。',
+    why: '它决定上下文长度、成本与多语言表现。',
+    description: [
+      '模型不认识文字，只认识整数。Tokenizer 负责把字符串切成 token 序列并映射为 id，这一步看似朴素，却直接决定了上下文窗口能装多少内容、API 调用花多少钱、以及模型在中文等非英语语言上的效率。',
+      '主流方案都是子词（subword）级别：BPE 从字符开始反复合并最高频的相邻对，WordPiece 按似然增益合并，Unigram 从大词表反向剪枝，SentencePiece 则提供了无需预分词的统一实现。字节级 BPE（byte-level BPE）进一步保证任何 UTF-8 文本都不会出现未知 token。',
+      '理解 Tokenizer 能解释许多“模型为什么犯傻”的现象：数字被切成奇怪的片段导致算术出错、中文单字消耗的 token 数远多于英文单词、字符串反转任务表现糟糕。这些都不是推理能力问题，而是输入粒度问题。',
+    ],
+    purposes: [
+      '准确估算文本的 token 数与 API 调用成本',
+      '解释模型在数字、罕见词上的异常行为',
+      '为特定领域或语言训练、扩展自定义词表',
+      '设计 RAG 的文本切块策略与长度控制',
+      '排查多语言场景下的上下文效率问题',
+    ],
+    resources: [
+      {
+        title: 'Hugging Face · Tokenizers 教程',
+        type: 'doc',
+        url: 'https://huggingface.co/learn/llm-course/chapter6/1',
+        note: '系统讲解 BPE、WordPiece、Unigram 的差异与训练方式。',
+      },
+      {
+        title: 'Let\'s build the GPT Tokenizer（Karpathy）',
+        type: 'video',
+        url: 'https://www.youtube.com/watch?v=zduSFxRajkE',
+        note: '从零实现 BPE，讲清所有工程细节与坑点。',
+      },
+      {
+        title: 'Neural Machine Translation of Rare Words with Subword Units',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/1508.07909',
+        note: 'BPE 应用于 NLP 的奠基论文。',
+      },
+      {
+        title: 'tiktoken',
+        type: 'doc',
+        url: 'https://github.com/openai/tiktoken',
+        note: 'OpenAI 官方分词库，可直接用于 token 计数。',
+      },
+    ],
+    zhihuKeywords: ['BPE 分词 原理', 'tokenizer 中文 token 消耗'],
+    prerequisites: ['python'],
+  },
+  {
+    id: 'transformer',
+    title: 'Transformer 架构',
+    category: 'llm-core',
+    summary: '注意力、前馈层、残差与归一化堆叠成的可扩展骨干网络。',
+    why: '几乎所有现代大模型的统一骨架。',
+    description: [
+      'Transformer 把注意力机制组装成了一个可以无限堆叠的标准块：多头自注意力负责跨位置聚合信息，逐位置前馈网络负责提升表示容量，残差连接与层归一化保证梯度能穿透几十甚至上百层。架构的真正价值在于高度并行、易于扩展。',
+      '需要掌握的结构细节：编码器 / 解码器与仅解码器（decoder-only）架构的区别与适用场景、位置编码的演进（绝对正弦编码 → 可学习编码 → 旋转位置编码 RoPE → ALiBi）、前归一化（Pre-LN）相比后归一化的训练稳定性优势、前馈层的升维倍数与激活函数选择（GELU、SwiGLU）、KV Cache 在推理阶段的作用。',
+      '现代主流模型（GPT、LLaMA、Qwen 系列）基本都是 decoder-only + RoPE + Pre-RMSNorm + SwiGLU 的组合。理解这些选择背后的权衡，比死记某个模型的层数更有价值。建议对照 nanoGPT 或 LLaMA 源码逐行读一遍。',
+    ],
+    purposes: [
+      '读懂主流开源大模型的网络结构代码',
+      '估算模型参数量、显存占用与推理算力需求',
+      '理解上下文长度扩展方案的原理与限制',
+      '理解 KV Cache 为何是推理显存的主要开销',
+      '为预训练、微调与推理优化提供结构认知',
+    ],
+    resources: [
+      {
+        title: 'Attention Is All You Need',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/1706.03762',
+        note: 'Transformer 原论文，架构定义的源头。',
+      },
+      {
+        title: 'The Annotated Transformer',
+        type: 'article',
+        url: 'https://nlp.seas.harvard.edu/annotated-transformer/',
+        note: '哈佛逐行注释实现，论文与代码对照阅读。',
+      },
+      {
+        title: 'CS224N: NLP with Deep Learning',
+        type: 'course',
+        url: 'https://web.stanford.edu/class/cs224n/',
+        note: '斯坦福课程，Transformer 与预训练章节质量极高。',
+      },
+      {
+        title: 'LLaMA: Open and Efficient Foundation Language Models',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2302.13971',
+        note: '现代 decoder-only 架构的工程选择范本。',
+      },
+    ],
+    zhihuKeywords: ['Transformer 架构 详解', 'RoPE 旋转位置编码 原理'],
+    prerequisites: ['attention'],
+  },
+  {
+    id: 'pretraining',
+    title: '预训练与 Scaling Law',
+    category: 'llm-core',
+    summary: '海量语料上的自监督训练，以及参数、数据与算力的配比规律。',
+    why: '模型的通用能力几乎全部来自这一阶段。',
+    description: [
+      '预训练的任务简单得出乎意料：预测下一个 token。但当语料规模达到万亿级、参数达到百亿级时，这个朴素目标会催生出语法、常识、推理甚至代码能力——这是大模型最反直觉也最关键的事实。',
+      'Scaling Law 把“规模换能力”变成了可计算的工程问题。Kaplan 等人发现损失随参数量、数据量、算力呈幂律下降；Chinchilla 进一步修正了最优配比，指出当时的模型普遍参数过多而数据不足，给定算力预算下 token 数应约为参数量的 20 倍。这一结论直接改变了整个行业的训练策略。',
+      '工程层面需要理解：数据配比与去重质量常比模型结构更影响最终效果、学习率预热与余弦衰减的调度、分布式训练的并行策略（数据并行、张量并行、流水线并行、ZeRO 显存优化）、以及训练过程中 loss spike 的监控与恢复。',
+    ],
+    purposes: [
+      '理解大模型通用能力的来源与边界',
+      '依据 Scaling Law 规划算力、数据与参数配比',
+      '评估继续预训练（continual pretraining）的可行性',
+      '理解分布式训练的并行策略与显存优化手段',
+      '判断一个能力问题该用预训练还是微调解决',
+    ],
+    resources: [
+      {
+        title: 'Scaling Laws for Neural Language Models',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2001.08361',
+        note: 'Kaplan 等人提出幂律关系的奠基论文。',
+      },
+      {
+        title: 'Training Compute-Optimal Large Language Models',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2203.15556',
+        note: 'Chinchilla 论文，修正最优参数-数据配比。',
+      },
+      {
+        title: 'Language Models are Few-Shot Learners',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2005.14165',
+        note: 'GPT-3 论文，规模涌现能力的经典实证。',
+      },
+      {
+        title: 'The Llama 3 Herd of Models',
+        type: 'paper',
+        url: 'https://arxiv.org/abs/2407.21783',
+        note: '工业级预训练全流程的详尽技术报告。',
+      },
+    ],
+    zhihuKeywords: ['Scaling Law 大模型 规律', '预训练 数据配比 重要性'],
+    prerequisites: ['transformer', 'pytorch'],
+  },
+];
