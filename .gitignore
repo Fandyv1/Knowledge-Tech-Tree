@@ -1,6 +1,7 @@
 # Agent 内部目录
 .box-agent/
 .box-agent-scratch/
+.playwright-mcp/
 
 # 依赖
 node_modules/
@@ -13,6 +14,8 @@ venv/
 dist/
 build/
 *.egg-info/
+*.o
+*.ali
 
 # 环境与密钥
 .env
