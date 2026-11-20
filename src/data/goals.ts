@@ -7,12 +7,12 @@ import { llmApplicationNodes } from './nodes/llm-application';
 import { engineeringNodes } from './nodes/engineering';
 
 const aiLlmCategories: Category[] = [
-  { id: 'math', name: '数学基础', color: '#6366F1', colorSoft: '#EEEFFE' },
-  { id: 'programming', name: '编程与工具', color: '#0EA5E9', colorSoft: '#E6F5FD' },
-  { id: 'ml', name: '机器学习', color: '#10B981', colorSoft: '#E4F8F0' },
-  { id: 'llm-core', name: '大模型核心', color: '#F59E0B', colorSoft: '#FEF3E2' },
-  { id: 'engineering', name: '工程化', color: '#7C3AED', colorSoft: '#F1EBFE' },
-  { id: 'practice', name: '实践与评测', color: '#EF4444', colorSoft: '#FDEBEB' },
+  { id: 'math', name: '数学基础', color: '#818CF8', colorSoft: 'rgba(129, 140, 248, 0.16)' },
+  { id: 'programming', name: '编程与工具', color: '#38BDF8', colorSoft: 'rgba(56, 189, 248, 0.16)' },
+  { id: 'ml', name: '机器学习', color: '#34D399', colorSoft: 'rgba(52, 211, 153, 0.16)' },
+  { id: 'llm-core', name: '大模型核心', color: '#C084FC', colorSoft: 'rgba(192, 132, 252, 0.18)' },
+  { id: 'engineering', name: '工程化', color: '#F472B6', colorSoft: 'rgba(244, 114, 182, 0.16)' },
+  { id: 'practice', name: '实践与评测', color: '#FB923C', colorSoft: 'rgba(251, 146, 60, 0.16)' },
 ];
 
 const aiLlmNodes: KnowledgeNode[] = [

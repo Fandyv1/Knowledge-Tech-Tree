@@ -4,11 +4,18 @@
 
 @layer base {
   :root {
-    --node-w: 190px;
-    --node-h: 68px;
+    /* 天体尺寸：恒星 / 行星 / 卫星三档 */
+    --body-star: 116px;
+    --body-planet: 92px;
+    --body-moon: 76px;
+
     --enter-stagger: 110ms;
-    --enter-duration: 420ms;
+    --enter-duration: 460ms;
     --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    /* 参考图提取：色相 250–272，强调 #7C3AED / #A855F7 */
+    --hue-core: 258;
+    --glow-core: rgba(168, 85, 247, 0.55);
   }
 
   html,
@@ -18,7 +25,7 @@
   }
 
   body {
-    @apply bg-canvas text-ink-900 antialiased;
+    @apply bg-void-900 text-star-100 antialiased;
     font-family:
       system-ui,
       'PingFang SC',
@@ -27,36 +34,353 @@
       sans-serif;
   }
 
+  /* 全站底层氛围：多个径向光斑叠加，模拟深空星云 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        52rem 34rem at 50% -2%,
+        rgba(124, 58, 237, 0.3),
+        transparent 64%
+      ),
+      radial-gradient(
+        36rem 26rem at 86% 18%,
+        rgba(59, 130, 246, 0.14),
+        transparent 60%
+      ),
+      radial-gradient(
+        34rem 24rem at 12% 34%,
+        rgba(168, 85, 247, 0.14),
+        transparent 62%
+      ),
+      radial-gradient(
+        58rem 34rem at 50% 104%,
+        rgba(139, 92, 246, 0.22),
+        transparent 62%
+      );
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
   *:focus-visible {
-    @apply outline-none ring-2 ring-offset-2 ring-sky-500/70;
+    @apply outline-none ring-2 ring-nebula-400/70 ring-offset-2 ring-offset-void-900;
+  }
+
+  ::selection {
+    background: rgba(168, 85, 247, 0.32);
+    color: #fff;
+  }
+
+  /* 暗色滚动条 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.28);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 85, 247, 0.45);
+    background-clip: content-box;
   }
 }
 
 @layer components {
-  .surface-card {
-    @apply rounded-xl border border-line bg-white shadow-card;
+  /* 毛玻璃卡片：半透明底 + 背景模糊 + 内高光描边 */
+  .glass-card {
+    @apply rounded-2xl border border-white/[0.07] bg-white/[0.035] shadow-glass
+      backdrop-blur-xl;
+  }
+
+  .glass-panel {
+    @apply border-b border-white/[0.06] bg-void-900/70 backdrop-blur-xl;
   }
 
   .pill-button {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white
-      px-3 py-1.5 text-sm text-ink-700 transition-colors duration-150
-      hover:border-sky-300 hover:text-sky-700;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/10
+      bg-white/[0.04] px-3 py-1.5 text-sm text-star-200 backdrop-blur-md
+      transition-all duration-150
+      hover:border-nebula-400/45 hover:bg-nebula-500/[0.14] hover:text-star-100;
   }
 
   .ghost-button {
-    @apply inline-flex items-center gap-1.5 rounded-lg border border-line bg-white
-      px-3 py-2 text-sm text-ink-700 transition-colors duration-150
-      hover:border-sky-300 hover:text-sky-700 disabled:opacity-50;
+    @apply inline-flex items-center gap-1.5 rounded-xl border border-white/10
+      bg-white/[0.04] px-3.5 py-2 text-sm text-star-200 backdrop-blur-md
+      transition-all duration-150
+      hover:border-nebula-400/45 hover:bg-nebula-500/[0.14] hover:text-star-100
+      disabled:opacity-40;
   }
 
   .icon-button {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-lg border
-      border-line bg-white text-ink-500 transition-colors duration-150
-      hover:border-sky-300 hover:text-sky-700;
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-xl border
+      border-white/10 bg-white/[0.04] text-star-300 backdrop-blur-md
+      transition-all duration-150
+      hover:border-nebula-400/45 hover:bg-nebula-500/[0.14] hover:text-star-100;
+  }
+
+  /* 主行动按钮：紫色渐变 + 外发光 */
+  .primary-button {
+    @apply inline-flex items-center gap-1.5 rounded-full px-5 text-sm font-medium
+      text-white transition-all duration-150;
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 55%, #8b5cf6 100%);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      0 4px 20px -4px rgba(124, 58, 237, 0.7);
+  }
+
+  .primary-button:hover {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.16) inset,
+      0 6px 28px -4px rgba(168, 85, 247, 0.85);
+    filter: brightness(1.08);
   }
 }
 
-/* ---------- 首页：空输入抖动 ---------- */
+@layer components {
+  /* ===== 天体节点 ===== */
+  /* 外层只负责定位与命中，视觉全部交给内部 .body-core */
+  .celestial {
+    @apply relative grid place-items-center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 球体本体：径向渐变制造受光面，左上偏亮 */
+  .body-core {
+    @apply relative grid place-items-center rounded-full text-center;
+    transition:
+      transform 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out),
+      filter 220ms var(--ease-out);
+  }
+
+  .celestial:hover .body-core,
+  .celestial:focus-visible .body-core {
+    transform: scale(1.07);
+  }
+
+
+
+
+  /* 恒星光冕：独立一层，不参与命中 */
+  .corona {
+    position: absolute;
+    inset: -34%;
+    border-radius: 9999px;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      rgba(251, 191, 36, 0.32) 0%,
+      rgba(251, 191, 36, 0.2) 28%,
+      rgba(245, 158, 11, 0.1) 48%,
+      rgba(245, 158, 11, 0.04) 64%,
+      transparent 78%
+    );
+    animation: breathe 4.5s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+
+  /* 行星光晕 */
+  .halo {
+    position: absolute;
+    inset: -26%;
+    border-radius: 9999px;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      hsl(calc(var(--body-hue, 258) * 1deg) 85% 64% / 0.34) 0%,
+      hsl(calc(var(--body-hue, 258) * 1deg) 85% 62% / 0.18) 34%,
+      hsl(calc(var(--body-hue, 258) * 1deg) 85% 58% / 0.06) 56%,
+      transparent 74%
+    );
+  }
+
+  /* 轨道环：倾斜的椭圆描边，营造天体轨道感 */
+  .orbit-ring {
+    position: absolute;
+    inset: -24%;
+    border-radius: 9999px;
+    pointer-events: none;
+    border: 2px solid hsl(calc(var(--body-hue, 258) * 1deg) 90% 78% / 0.5);
+    transform: rotateX(70deg);
+    box-shadow: 0 0 10px -2px hsl(calc(var(--body-hue, 258) * 1deg) 90% 70% / 0.5);
+  }
+
+  /* 标签绝对定位：脱离布局流，放大字号不会撑开节点容器 */
+  .celestial-text {
+    @apply pointer-events-none absolute left-1/2 top-full flex flex-col
+      items-center;
+    transform: translateX(-50%);
+    margin-top: 6px;
+    width: max-content;
+  }
+
+  .celestial-label {
+    @apply pointer-events-none rounded-md px-1.5 py-0.5 text-center
+      font-semibold leading-snug text-star-100;
+    max-width: calc(150px * var(--label-scale, 1));
+    font-size: calc(13px * var(--label-scale, 1));
+    background: rgba(5, 6, 15, 0.62);
+    text-shadow:
+      0 1px 3px rgba(0, 0, 0, 1),
+      0 0 12px rgba(0, 0, 0, 0.95);
+  }
+
+  .celestial-sub {
+    @apply pointer-events-none mt-1 font-medium leading-none;
+    font-size: calc(11px * var(--label-scale, 1));
+    color: hsl(calc(var(--body-hue, 258) * 1deg) 70% 80%);
+    text-shadow:
+      0 1px 3px rgba(0, 0, 0, 1),
+      0 0 10px rgba(0, 0, 0, 0.95);
+  }
+
+  /* 链路高亮：命中祖先链时提亮，其余降到低透明度 */
+  .celestial[data-dim='true'] {
+    opacity: 0.26;
+    filter: saturate(0.45);
+  }
+
+  .celestial[data-lit='true'] .body-core {
+    box-shadow:
+      0 0 0 2px rgba(196, 164, 255, 0.85) inset,
+      0 0 30px 2px rgba(168, 85, 247, 0.8),
+      0 0 76px 8px rgba(124, 58, 237, 0.45);
+  }
+
+  .celestial[data-dim='true'],
+  .celestial[data-lit='true'] {
+    transition:
+      opacity 180ms var(--ease-out),
+      filter 180ms var(--ease-out);
+  }
+}
+
+/* ===== 天体球体（类名由 JS 拼接，必须置于 @layer 之外避免被摇树）===== */
+
+/* 恒星：最亮，强发光，带呼吸动画 */
+.body-star {
+  width: 120px;
+  height: 120px;
+  background:
+    radial-gradient(
+      circle at 34% 30%,
+      #fff7dd 0%,
+      #fde68a 14%,
+      #fbbf24 34%,
+      #f59e0b 56%,
+      #b45309 80%,
+      #7c2d12 100%
+    );
+  box-shadow:
+    0 0 0 1px rgba(253, 230, 138, 0.55) inset,
+    0 0 30px -2px rgba(251, 191, 36, 0.8),
+    0 0 74px 6px rgba(245, 158, 11, 0.42);
+}
+
+/* 行星：按类别注入色相，hsl 需显式 deg 单位 */
+.body-planet {
+  width: 76px;
+  height: 76px;
+  background: radial-gradient(
+    circle at 34% 28%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 92% 78%) 0%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 82% 62%) 26%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 74% 44%) 58%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 68% 22%) 100%
+  );
+  box-shadow:
+    0 0 0 1px hsl(calc(var(--body-hue, 258) * 1deg) 90% 82% / 0.45) inset,
+    0 0 24px -4px hsl(calc(var(--body-hue, 258) * 1deg) 85% 62% / 0.7),
+    0 0 58px 2px hsl(calc(var(--body-hue, 258) * 1deg) 80% 52% / 0.28);
+}
+
+/* 卫星：最小最暗，岩石质感 */
+.body-moon {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(
+    circle at 34% 28%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 36% 76%) 0%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 30% 56%) 30%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 26% 38%) 62%,
+    hsl(calc(var(--body-hue, 258) * 1deg) 22% 20%) 100%
+  );
+  box-shadow:
+    0 0 0 1px hsl(calc(var(--body-hue, 258) * 1deg) 42% 80% / 0.35) inset,
+    0 0 18px -4px hsl(calc(var(--body-hue, 258) * 1deg) 42% 62% / 0.5);
+}
+
+/* ===== React Flow 画布适配 ===== */
+.react-flow__node:focus,
+.react-flow__node:focus-visible {
+  outline: none;
+}
+
+.react-flow__node:focus-visible .body-core {
+  box-shadow:
+    0 0 0 2px rgba(196, 164, 255, 0.95) inset,
+    0 0 0 4px rgba(124, 58, 237, 0.55),
+    0 0 34px 2px rgba(168, 85, 247, 0.7);
+}
+
+/* 连线默认为暗淡的轨迹线 */
+.react-flow__edge-path {
+  stroke: rgba(170, 155, 215, 0.52);
+  stroke-width: 1.7;
+  transition:
+    stroke 200ms ease,
+    stroke-width 200ms ease,
+    opacity 200ms ease;
+}
+
+/* 命中链路：点亮为紫色能量轨迹 */
+.react-flow__edge.ktt-edge-active .react-flow__edge-path {
+  stroke: rgba(196, 164, 255, 0.95);
+  stroke-width: 2.4;
+  filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.85));
+}
+
+.react-flow__edge.ktt-edge-faded .react-flow__edge-path {
+  opacity: 0.16;
+}
+
+.react-flow__attribution {
+  background-color: transparent;
+  font-size: 10px;
+}
+
+.react-flow__attribution a {
+  color: rgba(167, 159, 196, 0.5);
+}
+
+/* ===== 动画 ===== */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+
 @keyframes shake-x {
   0%,
   100% {
@@ -80,7 +404,6 @@
   animation: shake-x 420ms var(--ease-out);
 }
 
-/* ---------- 通用淡入 ---------- */
 @keyframes fade-rise {
   from {
     opacity: 0;
@@ -93,30 +416,31 @@
 }
 
 .animate-fade-rise {
-  animation: fade-rise 280ms var(--ease-out) both;
+  animation: fade-rise 300ms var(--ease-out) both;
 }
 
-/* ---------- 科技树：节点入场 ---------- */
-@keyframes node-emerge {
+/* 入场：天体由暗处浮现 */
+@keyframes body-emerge {
   from {
     opacity: 0;
-    transform: scale(0.92);
+    transform: scale(0.72);
+    filter: brightness(0.3) blur(3px);
   }
   to {
     opacity: 1;
     transform: scale(1);
+    filter: brightness(1) blur(0);
   }
 }
 
-.tree-entering .ktt-node {
-  animation: node-emerge var(--enter-duration) var(--ease-out) both;
+.tree-entering .celestial {
+  animation: body-emerge var(--enter-duration) var(--ease-out) both;
   animation-delay: calc(var(--depth, 0) * var(--enter-stagger));
 }
 
-/* 连线在节点开始浮现后统一绘制，避免出现"线先到、节点后到" */
 @keyframes edge-draw {
   from {
-    stroke-dashoffset: 800;
+    stroke-dashoffset: 900;
     opacity: 0;
   }
   to {
@@ -126,84 +450,59 @@
 }
 
 .tree-entering .react-flow__edge-path {
-  stroke-dasharray: 800;
-  animation: edge-draw 900ms var(--ease-out) both;
-  animation-delay: 220ms;
+  stroke-dasharray: 900;
+  animation: edge-draw 1000ms var(--ease-out) both;
+  animation-delay: 240ms;
 }
 
-/* ---------- 科技树：节点与连线状态 ---------- */
-.ktt-node {
-  width: var(--node-w);
-  height: var(--node-h);
-  @apply relative flex cursor-pointer select-none items-center overflow-hidden
-    rounded-xl border bg-white text-left shadow-card;
-  transition:
-    opacity 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease,
-    transform 180ms ease;
+/* 缓慢漂移的星尘层 */
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-140px, -90px, 0);
+  }
 }
 
-.ktt-node:hover {
-  @apply shadow-hover;
+.starfield {
+  position: absolute;
+  inset: -140px;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 22%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 38% 64%, rgba(216, 206, 240, 0.7), transparent),
+    radial-gradient(1.6px 1.6px at 68% 18%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 84% 52%, rgba(196, 164, 255, 0.8), transparent),
+    radial-gradient(1.2px 1.2px at 24% 86%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 56% 38%, rgba(147, 197, 253, 0.7), transparent),
+    radial-gradient(1.3px 1.3px at 92% 78%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 6% 48%, rgba(216, 206, 240, 0.6), transparent);
+  background-size: 420px 420px;
+  animation: drift 90s linear infinite alternate;
 }
 
-.ktt-node[data-dimmed='true'] {
-  opacity: 0.35;
-}
-
-.ktt-node[data-selected='true'] {
-  box-shadow:
-    0 0 0 2px var(--accent, #0ea5e9),
-    0 8px 24px -8px rgba(15, 23, 42, 0.18);
-}
-
-.ktt-node__bar {
-  @apply absolute inset-y-0 left-0 w-1.5;
-}
-
-.react-flow__edge-path {
-  stroke: #94a3b8;
-  stroke-width: 1.5;
-  transition:
-    stroke 180ms ease,
-    opacity 180ms ease,
-    stroke-width 180ms ease;
-}
-
-.react-flow__edge.ktt-edge-active .react-flow__edge-path {
-  stroke: #f59e0b;
-  stroke-width: 2.4;
-}
-
-.react-flow__edge.ktt-edge-faded .react-flow__edge-path {
-  opacity: 0.25;
-}
-
-.react-flow__node:focus,
-.react-flow__node:focus-visible {
-  outline: none;
-}
-
-.react-flow__attribution {
-  @apply text-[10px];
-}
-
-/* ---------- 可访问性：减少动画 ---------- */
+/* ===== 可访问性：减少动画 ===== */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --enter-stagger: 24ms;
-    --enter-duration: 160ms;
+    --enter-duration: 180ms;
   }
 
-  .animate-shake,
-  .animate-fade-rise {
-    animation-duration: 120ms;
+  .corona,
+  .starfield {
+    animation: none;
   }
 
   .tree-entering .react-flow__edge-path {
     stroke-dasharray: none;
     animation: none;
+  }
+
+  .animate-shake,
+  .animate-fade-rise {
+    animation-duration: 120ms;
   }
 
   *,

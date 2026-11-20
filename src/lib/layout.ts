@@ -3,19 +3,23 @@ import type { Edge, Node } from '@xyflow/react';
 import { Position } from '@xyflow/react';
 import type { Category, KnowledgeNode, LearningGoal } from '../types';
 import { buildGraphIndex, type GraphIndex } from './graph';
+import { BODY_SIZE, getBodyKind, hexToHue, type BodyKind } from './celestial';
 
-/** 节点尺寸与 CSS 保持同源，布局不依赖 DOM 测量，避免首帧抖动。 */
-export const NODE_WIDTH = 190;
-export const NODE_HEIGHT = 68;
+/** 节点容器统一尺寸：取最大天体直径，外加标签占位高度 */
+export const NODE_WIDTH = 150;
+export const NODE_HEIGHT = 150;
 
-const RANK_SEP = 96;
-const NODE_SEP = 48;
+/** 天体为圆形，需要比矩形布局更宽裕的间距，避免光晕互相侵占 */
+const RANK_SEP = 132;
+const NODE_SEP = 72;
 
 export interface KnowledgeNodeData extends Record<string, unknown> {
   node: KnowledgeNode;
   category: Category;
   depth: number;
-  isRoot: boolean;
+  kind: BodyKind;
+  hue: number;
+  successorCount: number;
 }
 
 export type FlowNode = Node<KnowledgeNodeData, 'knowledge'>;
@@ -48,8 +52,8 @@ function computeLayout(goal: LearningGoal): LayoutResult {
     rankdir: 'TB',
     nodesep: NODE_SEP,
     ranksep: RANK_SEP,
-    marginx: 32,
-    marginy: 32,
+    marginx: 72,
+    marginy: 72,
   });
 
   for (const node of goal.nodes) {
@@ -88,7 +92,9 @@ function computeLayout(goal: LearningGoal): LayoutResult {
         node,
         category,
         depth: index.depth.get(node.id) ?? 0,
-        isRoot: (index.prerequisites.get(node.id) ?? []).length === 0,
+        kind: getBodyKind(index, node.id),
+        hue: hexToHue(category.color),
+        successorCount: (index.successors.get(node.id) ?? []).length,
       },
       sourcePosition: Position.Bottom,
       targetPosition: Position.Top,
@@ -105,7 +111,7 @@ function computeLayout(goal: LearningGoal): LayoutResult {
         id: `${prerequisite}--${node.id}`,
         source: prerequisite,
         target: node.id,
-        type: 'smoothstep',
+        type: 'default',
         focusable: false,
       });
     }
@@ -113,3 +119,5 @@ function computeLayout(goal: LearningGoal): LayoutResult {
 
   return { nodes, edges, index };
 }
+
+export { BODY_SIZE };

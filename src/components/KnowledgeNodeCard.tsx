@@ -4,49 +4,50 @@ import type { FlowNode } from '../lib/layout';
 import { useHighlight } from './HighlightContext';
 
 /**
- * 自定义节点。
+ * 天体节点。
  * 高亮状态通过 Context 读取，使 nodes 数组引用保持稳定，
  * 避免每次 hover 触发 React Flow 的全量节点 diff。
  */
 function KnowledgeNodeCard({ id, data }: NodeProps<FlowNode>) {
   const { hoveredId, selectedId, highlightSet } = useHighlight();
-  const { node, category, depth, isRoot } = data;
+  const { node, category, depth, kind, hue } = data;
 
   const dimmed = hoveredId !== null && !highlightSet.has(id);
-  const onPath = hoveredId !== null && highlightSet.has(id);
+  const lit =
+    (hoveredId !== null && highlightSet.has(id)) || selectedId === id;
 
   return (
     <div
-      className="ktt-node"
-      data-dimmed={dimmed}
-      data-selected={selectedId === id}
+      className="celestial"
+      data-dim={dimmed}
+      data-lit={lit}
       style={
         {
           '--depth': depth,
-          '--accent': category.color,
-          backgroundColor: onPath ? category.colorSoft : '#FFFFFF',
-          borderColor: onPath ? category.color : '#E2E8F0',
+          '--body-hue': hue,
+          width: 150,
         } as React.CSSProperties
       }
     >
       <Handle type="target" position={Position.Top} isConnectable={false} />
 
-      <span className="ktt-node__bar" style={{ backgroundColor: category.color }} />
+      <div className="relative grid place-items-center">
+        {kind === 'star' ? (
+          <span className="corona" aria-hidden="true" />
+        ) : (
+          <>
+            <span className="halo" aria-hidden="true" />
+            {kind === 'planet' && <span className="orbit-ring" aria-hidden="true" />}
+          </>
+        )}
 
-      <div className="min-w-0 flex-1 pl-4 pr-3">
-        <p className="truncate text-[13.5px] font-medium leading-tight text-ink-900">
-          {node.title}
-        </p>
-        <div className="mt-1 flex items-center gap-1.5">
-          <span className="truncate text-[11px] text-ink-500">{category.name}</span>
-          {isRoot && (
-            <span
-              className="shrink-0 rounded border border-line bg-canvas px-1 py-px
-                text-[10px] leading-tight text-ink-500"
-            >
-              起点
-            </span>
-          )}
+        <div className={`body-core body-${kind}`}>
+          <span className="sr-only">{node.title}</span>
+        </div>
+
+        <div className="celestial-text">
+          <p className="celestial-label">{node.title}</p>
+          <p className="celestial-sub">{category.name}</p>
         </div>
       </div>
 

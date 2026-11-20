@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Background,
-  BackgroundVariant,
-  MarkerType,
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
@@ -215,10 +212,10 @@ function TechTreeInner({
     onReady({
       zoomIn: () => flow.zoomIn({ duration: 180 }),
       zoomOut: () => flow.zoomOut({ duration: 180 }),
-      fitView: () => flow.fitView({ duration: 240, padding: 0.18 }),
+      fitView: () => flow.fitView({ duration: 240, padding: 0.08, maxZoom: 1 }),
       reset: () => {
         window.sessionStorage.removeItem(storageKey);
-        flow.fitView({ duration: 240, padding: 0.18 });
+        flow.fitView({ duration: 240, padding: 0.08, maxZoom: 1 });
       },
     });
   }, [flow, goal.id, onReady]);
@@ -244,7 +241,7 @@ function TechTreeInner({
           );
         } else {
           // focus 的 id 无效时回退到适应画布
-          flow.fitView({ padding: 0.18 });
+          flow.fitView({ padding: 0.08, maxZoom: 1 });
         }
         return;
       }
@@ -267,7 +264,7 @@ function TechTreeInner({
         }
         window.sessionStorage.removeItem(storageKey);
       }
-      flow.fitView({ padding: 0.18 });
+      flow.fitView({ padding: 0.08, maxZoom: 1 });
     });
 
     return () => {
@@ -295,6 +292,7 @@ function TechTreeInner({
     return {
       node: flowNode.data.node,
       category: flowNode.data.category,
+      kind: flowNode.data.kind,
       rect: {
         x: flowNode.position.x * zoom + offsetX,
         y: flowNode.position.y * zoom + offsetY,
@@ -308,10 +306,20 @@ function TechTreeInner({
     <HighlightContext.Provider value={highlight}>
       <div
         ref={wrapperRef}
-        className={`relative h-full w-full ${playEntrance ? 'tree-entering' : ''}`}
+        className={`relative h-full w-full overflow-hidden ${
+          playEntrance ? 'tree-entering' : ''
+        }`}
         onKeyDownCapture={onKeyDownCapture}
         onFocusCapture={onFocusCapture}
       >
+        {/* 漂移星尘层，置于画布之下 */}
+        <div className="starfield" aria-hidden="true" />
+
+        {/* 缩小时放大标签字号，保证远观仍可读 */}
+        <style>{`
+          .react-flow__viewport { --label-scale: ${Math.min(2.4, Math.max(1, 0.82 / Math.max(viewport.zoom, 0.2)))}; }
+        `}</style>
+
         <ReactFlow<FlowNode, Edge>
           nodes={nodes}
           edges={styledEdges}
@@ -325,31 +333,17 @@ function TechTreeInner({
           nodesConnectable={false}
           edgesFocusable={false}
           elementsSelectable
-          minZoom={0.3}
-          maxZoom={1.6}
+          minZoom={0.25}
+          maxZoom={1.8}
           fitView={!hasCustomViewport}
-          fitViewOptions={{ padding: 0.18 }}
+          fitViewOptions={{ padding: 0.08, maxZoom: 1 }}
           zoomOnScroll
           panOnDrag
           panOnScroll={false}
           proOptions={{ hideAttribution: false }}
-          defaultEdgeOptions={{
-            type: 'smoothstep',
-            markerEnd: {
-              type: MarkerType.ArrowClosed,
-              width: 16,
-              height: 16,
-              color: '#94A3B8',
-            },
-          }}
-        >
-          <Background
-            variant={BackgroundVariant.Dots}
-            gap={22}
-            size={1}
-            color="#CBD5E1"
-          />
-        </ReactFlow>
+          defaultEdgeOptions={{ type: 'default' }}
+          style={{ background: 'transparent' }}
+        />
 
         {hoverTarget && (
           <div className="pointer-events-none absolute inset-0">

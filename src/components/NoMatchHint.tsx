@@ -13,24 +13,19 @@ export default function NoMatchHint({
 }: NoMatchHintProps) {
   return (
     <div
-      className="surface-card animate-fade-rise mt-4 p-5"
+      className="glass-card animate-fade-rise mt-5 p-5"
       role="status"
       aria-live="polite"
     >
-      <p className="text-sm text-ink-700">
-        暂时还没有「<span className="font-medium text-ink-900">{attempted}</span>
+      <p className="text-sm text-star-200">
+        暂时还没有「<span className="font-medium text-star-100">{attempted}</span>
         」的知识库。
       </p>
-      <p className="mt-1.5 text-sm text-ink-500">
+      <p className="mt-1.5 text-sm text-star-400">
         演示版本只内置了一个学习目标，没有为其他方向伪造数据。
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={onPickExample}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2
-            text-sm font-medium text-white transition-colors duration-150 hover:bg-sky-700"
-        >
+        <button type="button" onClick={onPickExample} className="primary-button py-2">
           看看{exampleLabel}
           <span aria-hidden="true">→</span>
         </button>

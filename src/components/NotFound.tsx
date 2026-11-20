@@ -10,16 +10,20 @@ export default function NotFound({
   detail = '你访问的地址没有对应内容，可能是链接有误。',
 }: NotFoundProps) {
   return (
-    <main className="flex min-h-full items-center justify-center bg-canvas px-5 py-20">
-      <div className="w-full max-w-[420px] text-center">
-        <p className="text-[52px] font-semibold leading-none text-ink-400/50">404</p>
-        <h1 className="mt-5 text-xl font-semibold text-ink-900">{title}</h1>
-        <p className="mt-2 text-sm leading-relaxed text-ink-500">{detail}</p>
-        <Link
-          to="/"
-          className="mt-7 inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-5 py-2.5
-            text-sm font-medium text-white transition-colors duration-150 hover:bg-sky-700"
+    <main className="relative flex min-h-full items-center justify-center px-5 py-20">
+      <div className="w-full max-w-[440px] text-center">
+        <p
+          className="bg-clip-text text-[64px] font-semibold leading-none text-transparent"
+          style={{
+            backgroundImage:
+              'linear-gradient(135deg, rgba(216,206,240,0.5), rgba(124,58,237,0.65))',
+          }}
         >
+          404
+        </p>
+        <h1 className="mt-5 text-xl font-semibold text-star-100">{title}</h1>
+        <p className="mt-2.5 text-sm leading-relaxed text-star-400">{detail}</p>
+        <Link to="/" className="primary-button mt-8 py-2.5">
           <span aria-hidden="true">←</span>
           返回首页
         </Link>

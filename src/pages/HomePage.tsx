@@ -26,8 +26,8 @@ export default function HomePage() {
   const activeIndex = state.phase === 'analyzing' ? state.stepIndex : -1;
 
   return (
-    <main className="flex min-h-full flex-col bg-canvas">
-      <div className="flex flex-1 items-start justify-center px-5 pb-16 pt-[22vh] sm:pt-[26vh]">
+    <main className="relative flex min-h-full flex-col">
+      <div className="flex flex-1 items-center justify-center px-5 pb-10 pt-16">
         <div className="w-full max-w-[560px]">
           {analyzing ? (
             <AnalysisProgress
@@ -39,12 +39,19 @@ export default function HomePage() {
             />
           ) : (
             <>
-              <header className="mb-8 text-center">
-                <h1 className="text-[28px] font-semibold tracking-tight text-ink-900 sm:text-[32px]">
+              <header className="mb-9 text-center">
+                <h1
+                  className="bg-clip-text text-[30px] font-semibold tracking-tight
+                    text-transparent sm:text-[36px]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(118deg, #FFFFFF 4%, #E3D9FF 34%, #B07CFF 68%, #7C3AED 100%)',
+                  }}
+                >
                   知识科技树
                 </h1>
-                <p className="mt-2.5 text-[15px] text-ink-500">
-                  说说你想学什么，为你生成一棵知识科技树
+                <p className="mt-3 text-[15px] text-star-300">
+                  说说你想学什么，为你点亮一片知识星系
                 </p>
               </header>
 
@@ -72,12 +79,15 @@ export default function HomePage() {
         </div>
       </div>
 
-      <footer className="px-5 pb-8 text-center text-xs text-ink-400">
+      <footer className="px-5 pb-8 text-center text-xs text-star-300">
         {analyzing ? (
           <p>{DISCLAIMER}</p>
         ) : (
-          <p>
-            演示版本 · 当前内置 {goals.length} 个学习目标 · {DISCLAIMER}
+          <p className="mx-auto max-w-[36ch] leading-relaxed sm:max-w-none">
+            演示版本 · 当前内置 {goals.length} 个学习目标
+            <span className="hidden sm:inline"> · </span>
+            <br className="sm:hidden" />
+            {DISCLAIMER}
           </p>
         )}
       </footer>

@@ -58,14 +58,16 @@ export default function TreePage() {
   const focusNodeId = searchParams.get('focus');
 
   return (
-    <main className="flex h-full flex-col bg-canvas">
-      <header className="shrink-0 border-b border-line bg-white/90 backdrop-blur">
+    <main className="flex h-full flex-col">
+      <header className="glass-panel shrink-0">
         <div className="flex flex-wrap items-start justify-between gap-3 px-4 pb-3 pt-4 sm:px-6">
           <div className="min-w-0">
-            <h1 className="truncate text-lg font-semibold text-ink-900">
+            <h1 className="truncate text-lg font-semibold text-star-100">
               {goal.title}
             </h1>
-            <p className="mt-0.5 truncate text-[13px] text-ink-500">{goal.subtitle}</p>
+            <p className="mt-0.5 truncate text-[13px] text-star-400">
+              {goal.subtitle}
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -114,9 +116,9 @@ export default function TreePage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 px-4 pb-3 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-y-2 px-4 pb-3 sm:px-6">
           <CategoryLegend categories={goal.categories} counts={counts} />
-          <p className="text-[11.5px] text-ink-400">
+          <p className="text-[11.5px] text-star-400/70">
             分析基于本地预设知识库，未调用大模型
           </p>
         </div>

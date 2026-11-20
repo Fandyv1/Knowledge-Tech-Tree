@@ -37,6 +37,18 @@ export default function SearchBox({
         <label htmlFor="goal-input" className="sr-only">
           想学什么
         </label>
+
+        {/* 输入框外侧的紫色光晕 */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-x-6 -inset-y-8 -z-10 opacity-70"
+          style={{
+            background:
+              'radial-gradient(28rem 10rem at 50% 50%, rgba(124,58,237,0.32), transparent 70%)',
+            filter: 'blur(10px)',
+          }}
+        />
+
         <input
           id="goal-input"
           ref={inputRef}
@@ -46,17 +58,14 @@ export default function SearchBox({
           placeholder="例如：AI 大模型"
           aria-invalid={showEmptyHint}
           onChange={(event) => onChange(event.target.value)}
-          className="h-14 w-full rounded-full border border-line bg-white pl-6 pr-[148px]
-            text-base text-ink-900 shadow-card transition-colors duration-150
-            placeholder:text-ink-400 hover:border-sky-200
-            focus:border-sky-400 focus:outline-none focus:ring-4 focus:ring-sky-500/10"
+          className="h-14 w-full rounded-full border border-white/12 bg-white/[0.05]
+            pl-6 pr-[150px] text-base text-star-100 shadow-glass backdrop-blur-xl
+            transition-colors duration-150 placeholder:text-star-400
+            hover:border-nebula-400/40
+            focus:border-nebula-400/70 focus:outline-none focus:ring-4
+            focus:ring-nebula-500/20"
         />
-        <button
-          type="submit"
-          className="absolute right-2 top-2 inline-flex h-10 items-center gap-1.5 rounded-full
-            bg-sky-600 px-5 text-sm font-medium text-white transition-colors duration-150
-            hover:bg-sky-700 focus-visible:ring-offset-0"
-        >
+        <button type="submit" className="primary-button absolute right-2 top-2 h-10">
           生成学习路径
           <span aria-hidden="true">→</span>
         </button>
@@ -64,11 +73,11 @@ export default function SearchBox({
 
       <div className="mt-3 min-h-[20px] text-center" aria-live="polite">
         {showEmptyHint && (
-          <p className="text-sm text-rose-600">先告诉我你想学什么</p>
+          <p className="text-sm text-rose-300">先告诉我你想学什么</p>
         )}
       </div>
 
-      <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-sm text-ink-500">
+      <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-sm text-star-400">
         <span>试试：</span>
         {EXAMPLES.map((example) => (
           <button
