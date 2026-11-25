@@ -383,6 +383,7 @@ body::after {
 .star-node {
   position: relative;
   width: 150px;
+  height: 60px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition:
@@ -438,8 +439,12 @@ body::after {
 }
 
 .star-node__text {
-  margin-top: 3px;
+  position: absolute;
+  top: 54px;
+  left: 0;
+  right: 0;
   text-align: center;
+  pointer-events: none;
 }
 
 .star-node__name {
@@ -626,6 +631,70 @@ body::after {
     radial-gradient(40rem 26rem at 52% 38%, rgba(58, 74, 108, 0.16), transparent 70%),
     radial-gradient(30rem 22rem at 76% 74%, rgba(112, 86, 52, 0.1), transparent 70%),
     radial-gradient(26rem 18rem at 22% 66%, rgba(72, 92, 110, 0.1), transparent 70%);
+}
+
+/* ===== 星图底纹：同心轨道 / 类别射线 / 中心罗盘 ===== */
+
+.radial-core-plate {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform-origin: 0 0;
+}
+
+.radial-core-plate svg {
+  position: absolute;
+  left: -80px;
+  top: -80px;
+  overflow: visible;
+}
+
+.radial-ring {
+  fill: none;
+  stroke: rgba(239, 234, 222, 0.09);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.radial-ray {
+  stroke: rgba(239, 234, 222, 0.075);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.radial-ray--mid {
+  opacity: 0.4;
+  stroke-dasharray: 2 9;
+}
+
+.radial-core-ring {
+  fill: none;
+  stroke: rgba(201, 169, 106, 0.28);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.radial-core-ring--dashed {
+  stroke-dasharray: 2 6;
+  opacity: 0.7;
+}
+
+.radial-cross {
+  stroke: rgba(239, 234, 222, 0.12);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.radial-star {
+  fill: rgba(222, 197, 146, 0.55);
+}
+
+.radial-core-dot {
+  fill: rgba(248, 245, 236, 0.9);
 }
 
 /* ===== 星尘与入场动画 ===== */
@@ -817,7 +886,7 @@ body::after {
   }
 
   .star-node__text {
-    margin-top: 1px;
+    top: 54px;
   }
 }
 

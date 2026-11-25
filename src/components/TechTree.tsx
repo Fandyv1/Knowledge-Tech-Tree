@@ -19,6 +19,7 @@ import { HighlightContext, type HighlightState } from './HighlightContext';
 import KnowledgeNodeCard from './KnowledgeNodeCard';
 import ConstellationEdge from './ConstellationEdge';
 import HoverCard, { type HoverTarget } from './HoverCard';
+import RadialGuides, { CorePlate } from './RadialGuides';
 import { StarLegend } from './CategoryLegend';
 
 const HOVER_OPEN_DELAY = 250;
@@ -66,23 +67,17 @@ function TechTreeInner({
   onOpenNode,
   onReady,
 }: TechTreeProps) {
-  const { nodes, edges, index } = useMemo(() => getLayout(goal), [goal]);
+  const { nodes, edges, index, radial } = useMemo(() => getLayout(goal), [goal]);
   const flow = useReactFlow<FlowNode, FlowEdge>();
   const viewport = useViewport();
 
   // 窄屏上「全局适配」会把 20 个节点压到 0.3 倍，标签不可读。
-  // 因此窄屏改为「保底 0.52 + 顶部对齐」：先看清起点，再向下平移。
+  // 因此窄屏改为以星图原点为中心的局部视图：先看清内核，再向外漫游。
   const narrow = useMemo(
     () =>
       typeof window !== 'undefined' &&
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(max-width: 639px)').matches,
-    [],
-  );
-
-  // 「适应画布」始终允许缩到全景；窄屏首屏的保底缩放由下方初始视口逻辑负责。
-  const fitOptions = useMemo(
-    () => ({ padding: 0.1, maxZoom: 1, minZoom: 0.25 }),
     [],
   );
 
@@ -95,18 +90,62 @@ function TechTreeInner({
   const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
   const [container, setContainer] = useState({ width: 0, height: 0 });
 
-  // 需要自定义初始视口（focus 定位或恢复会话记忆）时，
-  // 关闭库的 fitView，避免它在 effect 之后覆盖我们设置的视口。
-  const [hasSavedViewport] = useState(() => {
-    if (focusNodeId) return true;
-    if (playEntrance) return false;
-    return (
-      window.sessionStorage.getItem(`${VIEWPORT_KEY_PREFIX}${goal.id}`) !== null
-    );
-  });
+  /**
+   * 全景取景：显式把「节点矩形 + 下方标签溢出 + 外圈轨道」纳入包围盒，
+   * 再尽量把星图原点保持在画布水平中心。
+   */
+  const fitAll = useCallback(
+    (duration = 0) => {
+      const element = wrapperRef.current;
+      if (!element) return;
+      const width = element.clientWidth;
+      const height = element.clientHeight;
+      if (!width || !height) return;
 
-  // 窄屏始终自行设置初始视口（顶部对齐 + 保底缩放）
-  const useCustomViewport = hasSavedViewport || narrow;
+      const labelOverflow = 34;
+      let minX = Number.POSITIVE_INFINITY;
+      let maxX = Number.NEGATIVE_INFINITY;
+      let minY = Number.POSITIVE_INFINITY;
+      let maxY = Number.NEGATIVE_INFINITY;
+
+      for (const node of nodes) {
+        minX = Math.min(minX, node.position.x);
+        maxX = Math.max(maxX, node.position.x + NODE_WIDTH);
+        minY = Math.min(minY, node.position.y);
+        maxY = Math.max(maxY, node.position.y + NODE_HEIGHT + labelOverflow);
+      }
+
+      const outer = radial.maxRadius + 34;
+      minX = Math.min(minX, -outer);
+      maxX = Math.max(maxX, outer);
+      minY = Math.min(minY, -outer);
+      maxY = Math.max(maxY, outer);
+
+      const margin = 14;
+      const zoom = Math.min(
+        1,
+        Math.max(
+          0.25,
+          Math.min(
+            (width - margin * 2) / Math.max(maxX - minX, 1),
+            (height - margin * 2) / Math.max(maxY - minY, 1),
+          ),
+        ),
+      );
+
+      const minViewX = margin - minX * zoom;
+      const maxViewX = width - margin - maxX * zoom;
+      const preferredX = width / 2;
+      const x =
+        minViewX > maxViewX
+          ? (minViewX + maxViewX) / 2
+          : Math.min(maxViewX, Math.max(minViewX, preferredX));
+      const y = height / 2 - ((minY + maxY) / 2) * zoom;
+
+      flow.setViewport({ x, y, zoom }, { duration });
+    },
+    [flow, nodes, radial.maxRadius],
+  );
 
   const clearTimers = useCallback(() => {
     if (openTimer.current !== null) window.clearTimeout(openTimer.current);
@@ -241,19 +280,18 @@ function TechTreeInner({
     onReady({
       zoomIn: () => flow.zoomIn({ duration: 180 }),
       zoomOut: () => flow.zoomOut({ duration: 180 }),
-      fitView: () => flow.fitView({ duration: 240, ...fitOptions }),
+      fitView: () => fitAll(),
       reset: () => {
         window.sessionStorage.removeItem(storageKey);
-        flow.fitView({ duration: 240, ...fitOptions });
+        fitAll();
       },
     });
-  }, [flow, goal.id, onReady, fitOptions]);
+  }, [flow, goal.id, onReady, fitAll]);
 
-  // 初始视口覆盖：focus 参数 > 会话记忆。
-  // 默认的「适应画布」由 ReactFlow 的 fitView 属性处理。
+  // 初始视口：focus 参数 > 会话记忆 > 以罗盘为中心取景
   const initialisedRef = useRef(false);
   useEffect(() => {
-    if (initialisedRef.current || !useCustomViewport) return;
+    if (initialisedRef.current) return;
     initialisedRef.current = true;
 
     const storageKey = `${VIEWPORT_KEY_PREFIX}${goal.id}`;
@@ -269,13 +307,15 @@ function TechTreeInner({
             { zoom: 1.1, duration: 420 },
           );
         } else {
-          flow.fitView(fitOptions);
+          fitAll();
         }
         return;
       }
 
-      // 从详情页返回时恢复之前的缩放与位置
-      const saved = window.sessionStorage.getItem(storageKey);
+      // 从详情页返回时恢复之前的缩放与位置（入场动画时不恢复）
+      const saved = playEntrance
+        ? null
+        : window.sessionStorage.getItem(storageKey);
       if (saved) {
         try {
           const viewport = JSON.parse(saved) as {
@@ -298,27 +338,23 @@ function TechTreeInner({
       }
 
       if (narrow) {
-        // 顶部对齐：让主星从画布上沿开始，而不是被居中裁掉
+        // 以星图原点为中心：中心罗盘 + 前两层轨道先入镜，外侧靠平移浏览
         const width = wrapperRef.current?.clientWidth ?? 0;
-        const xs = nodes.map((node) => node.position.x);
-        const ys = nodes.map((node) => node.position.y);
-        const minX = Math.min(...xs);
-        const minY = Math.min(...ys);
-        const graphWidth = Math.max(...xs) + NODE_WIDTH - minX;
-        const zoom = Math.max(
-          0.52,
-          Math.min(1, (width - 24) / Math.max(graphWidth, 1)),
-        );
+        const height = wrapperRef.current?.clientHeight ?? 0;
         flow.setViewport({
-          // 左对齐：优先露出学习路径的起点列，其余靠平移浏览
-          x: 12 - minX * zoom,
-          y: 16 - minY * zoom,
-          zoom,
+          x: width / 2,
+          y: height / 2,
+          zoom: 0.6,
         });
         return;
       }
 
-      flow.fitView(fitOptions);
+      fitAll();
+      // 字体加载会改变页眉高度，等布局稳定后再取景一次
+      window.requestAnimationFrame(() => fitAll());
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => fitAll()).catch(() => undefined);
+      }
     });
 
     return () => {
@@ -327,7 +363,7 @@ function TechTreeInner({
       // 否则第二次挂载会因守卫已置位而跳过，rAF 永远不执行。
       initialisedRef.current = false;
     };
-  }, [flow, focusNodeId, goal.id, nodes, useCustomViewport, narrow, fitOptions]);
+  }, [flow, focusNodeId, goal.id, nodes, narrow, playEntrance, fitAll]);
 
   const persistViewport = useCallback(() => {
     const viewport = flow.getViewport();
@@ -374,6 +410,9 @@ function TechTreeInner({
         <div className="canvas-nebula" aria-hidden="true" />
         <div className="starfield" aria-hidden="true" />
 
+        {/* 同心轨道、类别射线与中心罗盘 */}
+        <RadialGuides radial={radial} viewport={viewport} />
+
         {/* 缩小时放大标签字号，保证远观仍可读 */}
         <style>{`
           .react-flow__viewport { --label-scale: ${Math.min(1.9, Math.max(1, 0.86 / Math.max(viewport.zoom, 0.2)))}; }
@@ -395,14 +434,16 @@ function TechTreeInner({
           elementsSelectable
           minZoom={0.25}
           maxZoom={1.8}
-          fitView={!useCustomViewport}
-          fitViewOptions={fitOptions}
+          fitView={false}
           zoomOnScroll
           panOnDrag
           panOnScroll={false}
           proOptions={{ hideAttribution: false }}
           style={{ background: 'transparent' }}
         />
+
+        {/* 中心罗盘：盖住汇聚到原点的连线，形成视觉内核 */}
+        <CorePlate viewport={viewport} />
 
         {/* 画布 HUD：图号、比例、刻度、星等图例 */}
         <div className="hud left-4 top-3 hidden sm:block sm:left-6 sm:top-4">
