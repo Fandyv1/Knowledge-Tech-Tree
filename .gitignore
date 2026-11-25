@@ -9,6 +9,16 @@ qa-*.png
 # 设计参考素材（用户上传，不入库）
 web-color-schemes*.png
 
+# 大体积二进制素材（游戏素材包、演示文稿、幻灯片截图，不入库）
+*.pptx
+ppt-roadshow/preview/
+
+# 本地临时目录（截图 profile、参考图提取等）
+.ref-tmp/
+.shot-*/
+.shot-chrome/
+.shot-profile/
+
 # 依赖
 node_modules/
 __pycache__/

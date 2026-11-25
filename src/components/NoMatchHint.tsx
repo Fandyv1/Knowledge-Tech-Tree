@@ -13,23 +13,30 @@ export default function NoMatchHint({
 }: NoMatchHintProps) {
   return (
     <div
-      className="glass-card animate-fade-rise mt-5 p-5"
+      className="frame corners animate-fade-rise mt-6 p-5"
       role="status"
       aria-live="polite"
     >
-      <p className="text-sm text-star-200">
-        暂时还没有「<span className="font-medium text-star-100">{attempted}</span>
-        」的知识库。
+      <div className="flex items-center gap-2.5">
+        <span className="micro-strong">NO MATCH</span>
+        <span className="h-px flex-1 bg-white/10" aria-hidden="true" />
+        <span className="micro">未收录</span>
+      </div>
+
+      <p className="mt-3 text-[13.5px] leading-relaxed text-paper-200">
+        星图中暂时没有「
+        <span className="font-serif text-paper-50">{attempted}</span>」的坐标。
       </p>
-      <p className="mt-1.5 text-sm text-star-400">
+      <p className="mt-1.5 text-[12.5px] leading-relaxed text-paper-400">
         演示版本只内置了一个学习目标，没有为其他方向伪造数据。
       </p>
+
       <div className="mt-4 flex flex-wrap gap-2">
-        <button type="button" onClick={onPickExample} className="primary-button py-2">
-          看看{exampleLabel}
+        <button type="button" onClick={onPickExample} className="btn btn-gold">
+          查看{exampleLabel}
           <span aria-hidden="true">→</span>
         </button>
-        <button type="button" onClick={onClear} className="ghost-button">
+        <button type="button" onClick={onClear} className="btn">
           换个关键词
         </button>
       </div>

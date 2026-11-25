@@ -4,15 +4,22 @@ import {
   ReactFlowProvider,
   useReactFlow,
   useViewport,
-  type Edge,
   type NodeMouseHandler,
 } from '@xyflow/react';
 import type { LearningGoal } from '../types';
-import { getLayout, NODE_HEIGHT, NODE_WIDTH, type FlowNode } from '../lib/layout';
+import {
+  getLayout,
+  NODE_HEIGHT,
+  NODE_WIDTH,
+  type FlowEdge,
+  type FlowNode,
+} from '../lib/layout';
 import { getHighlightSet } from '../lib/graph';
 import { HighlightContext, type HighlightState } from './HighlightContext';
 import KnowledgeNodeCard from './KnowledgeNodeCard';
+import ConstellationEdge from './ConstellationEdge';
 import HoverCard, { type HoverTarget } from './HoverCard';
+import { StarLegend } from './CategoryLegend';
 
 const HOVER_OPEN_DELAY = 250;
 const HOVER_CLOSE_DELAY = 150;
@@ -25,6 +32,7 @@ const supportsHover = (): boolean =>
   window.matchMedia('(hover: hover)').matches;
 
 const nodeTypes = { knowledge: KnowledgeNodeCard };
+const edgeTypes = { constellation: ConstellationEdge };
 
 export interface TechTreeHandle {
   zoomIn: () => void;
@@ -59,8 +67,24 @@ function TechTreeInner({
   onReady,
 }: TechTreeProps) {
   const { nodes, edges, index } = useMemo(() => getLayout(goal), [goal]);
-  const flow = useReactFlow<FlowNode, Edge>();
+  const flow = useReactFlow<FlowNode, FlowEdge>();
   const viewport = useViewport();
+
+  // 窄屏上「全局适配」会把 20 个节点压到 0.3 倍，标签不可读。
+  // 因此窄屏改为「保底 0.52 + 顶部对齐」：先看清起点，再向下平移。
+  const narrow = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(max-width: 639px)').matches,
+    [],
+  );
+
+  // 「适应画布」始终允许缩到全景；窄屏首屏的保底缩放由下方初始视口逻辑负责。
+  const fitOptions = useMemo(
+    () => ({ padding: 0.1, maxZoom: 1, minZoom: 0.25 }),
+    [],
+  );
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const openTimer = useRef<number | null>(null);
@@ -73,13 +97,16 @@ function TechTreeInner({
 
   // 需要自定义初始视口（focus 定位或恢复会话记忆）时，
   // 关闭库的 fitView，避免它在 effect 之后覆盖我们设置的视口。
-  const [hasCustomViewport] = useState(() => {
+  const [hasSavedViewport] = useState(() => {
     if (focusNodeId) return true;
     if (playEntrance) return false;
     return (
       window.sessionStorage.getItem(`${VIEWPORT_KEY_PREFIX}${goal.id}`) !== null
     );
   });
+
+  // 窄屏始终自行设置初始视口（顶部对齐 + 保底缩放）
+  const useCustomViewport = hasSavedViewport || narrow;
 
   const clearTimers = useCallback(() => {
     if (openTimer.current !== null) window.clearTimeout(openTimer.current);
@@ -109,13 +136,15 @@ function TechTreeInner({
     () => ({
       hoveredId,
       selectedId,
-      highlightSet: hoveredId ? getHighlightSet(index, hoveredId) : new Set<string>(),
+      highlightSet: hoveredId
+        ? getHighlightSet(index, hoveredId)
+        : new Set<string>(),
     }),
     [hoveredId, selectedId, index],
   );
 
-  // 边的高亮：祖先链路上的边转主色，其余变淡。节点坐标不受影响。
-  const styledEdges = useMemo<Edge[]>(() => {
+  // 边的高亮：祖先链路上的边转黄铜金，其余变淡。节点坐标不受影响。
+  const styledEdges = useMemo<FlowEdge[]>(() => {
     if (!hoveredId) return edges;
 
     const set = highlight.highlightSet;
@@ -212,19 +241,19 @@ function TechTreeInner({
     onReady({
       zoomIn: () => flow.zoomIn({ duration: 180 }),
       zoomOut: () => flow.zoomOut({ duration: 180 }),
-      fitView: () => flow.fitView({ duration: 240, padding: 0.08, maxZoom: 1 }),
+      fitView: () => flow.fitView({ duration: 240, ...fitOptions }),
       reset: () => {
         window.sessionStorage.removeItem(storageKey);
-        flow.fitView({ duration: 240, padding: 0.08, maxZoom: 1 });
+        flow.fitView({ duration: 240, ...fitOptions });
       },
     });
-  }, [flow, goal.id, onReady]);
+  }, [flow, goal.id, onReady, fitOptions]);
 
   // 初始视口覆盖：focus 参数 > 会话记忆。
   // 默认的「适应画布」由 ReactFlow 的 fitView 属性处理。
   const initialisedRef = useRef(false);
   useEffect(() => {
-    if (initialisedRef.current || !hasCustomViewport) return;
+    if (initialisedRef.current || !useCustomViewport) return;
     initialisedRef.current = true;
 
     const storageKey = `${VIEWPORT_KEY_PREFIX}${goal.id}`;
@@ -240,8 +269,7 @@ function TechTreeInner({
             { zoom: 1.1, duration: 420 },
           );
         } else {
-          // focus 的 id 无效时回退到适应画布
-          flow.fitView({ padding: 0.08, maxZoom: 1 });
+          flow.fitView(fitOptions);
         }
         return;
       }
@@ -250,7 +278,11 @@ function TechTreeInner({
       const saved = window.sessionStorage.getItem(storageKey);
       if (saved) {
         try {
-          const viewport = JSON.parse(saved) as { x: number; y: number; zoom: number };
+          const viewport = JSON.parse(saved) as {
+            x: number;
+            y: number;
+            zoom: number;
+          };
           if (
             Number.isFinite(viewport.x) &&
             Number.isFinite(viewport.y) &&
@@ -264,7 +296,29 @@ function TechTreeInner({
         }
         window.sessionStorage.removeItem(storageKey);
       }
-      flow.fitView({ padding: 0.08, maxZoom: 1 });
+
+      if (narrow) {
+        // 顶部对齐：让主星从画布上沿开始，而不是被居中裁掉
+        const width = wrapperRef.current?.clientWidth ?? 0;
+        const xs = nodes.map((node) => node.position.x);
+        const ys = nodes.map((node) => node.position.y);
+        const minX = Math.min(...xs);
+        const minY = Math.min(...ys);
+        const graphWidth = Math.max(...xs) + NODE_WIDTH - minX;
+        const zoom = Math.max(
+          0.52,
+          Math.min(1, (width - 24) / Math.max(graphWidth, 1)),
+        );
+        flow.setViewport({
+          // 左对齐：优先露出学习路径的起点列，其余靠平移浏览
+          x: 12 - minX * zoom,
+          y: 16 - minY * zoom,
+          zoom,
+        });
+        return;
+      }
+
+      flow.fitView(fitOptions);
     });
 
     return () => {
@@ -273,7 +327,7 @@ function TechTreeInner({
       // 否则第二次挂载会因守卫已置位而跳过，rAF 永远不执行。
       initialisedRef.current = false;
     };
-  }, [flow, focusNodeId, goal.id, nodes, hasCustomViewport]);
+  }, [flow, focusNodeId, goal.id, nodes, useCustomViewport, narrow, fitOptions]);
 
   const persistViewport = useCallback(() => {
     const viewport = flow.getViewport();
@@ -292,7 +346,9 @@ function TechTreeInner({
     return {
       node: flowNode.data.node,
       category: flowNode.data.category,
-      kind: flowNode.data.kind,
+      starClass: flowNode.data.starClass,
+      order: flowNode.data.order,
+      coord: flowNode.data.coord,
       rect: {
         x: flowNode.position.x * zoom + offsetX,
         y: flowNode.position.y * zoom + offsetY,
@@ -301,6 +357,8 @@ function TechTreeInner({
       },
     };
   }, [hoverNodeId, nodes, viewport]);
+
+  const zoomLabel = viewport.zoom.toFixed(2);
 
   return (
     <HighlightContext.Provider value={highlight}>
@@ -312,18 +370,20 @@ function TechTreeInner({
         onKeyDownCapture={onKeyDownCapture}
         onFocusCapture={onFocusCapture}
       >
-        {/* 漂移星尘层，置于画布之下 */}
+        {/* 星云与漂移星尘层，置于画布之下 */}
+        <div className="canvas-nebula" aria-hidden="true" />
         <div className="starfield" aria-hidden="true" />
 
         {/* 缩小时放大标签字号，保证远观仍可读 */}
         <style>{`
-          .react-flow__viewport { --label-scale: ${Math.min(2.4, Math.max(1, 0.82 / Math.max(viewport.zoom, 0.2)))}; }
+          .react-flow__viewport { --label-scale: ${Math.min(1.9, Math.max(1, 0.86 / Math.max(viewport.zoom, 0.2)))}; }
         `}</style>
 
-        <ReactFlow<FlowNode, Edge>
+        <ReactFlow<FlowNode, FlowEdge>
           nodes={nodes}
           edges={styledEdges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodeMouseEnter={onNodeMouseEnter}
           onNodeMouseLeave={onNodeMouseLeave}
           onNodeClick={onNodeClick}
@@ -335,15 +395,50 @@ function TechTreeInner({
           elementsSelectable
           minZoom={0.25}
           maxZoom={1.8}
-          fitView={!hasCustomViewport}
-          fitViewOptions={{ padding: 0.08, maxZoom: 1 }}
+          fitView={!useCustomViewport}
+          fitViewOptions={fitOptions}
           zoomOnScroll
           panOnDrag
           panOnScroll={false}
           proOptions={{ hideAttribution: false }}
-          defaultEdgeOptions={{ type: 'default' }}
           style={{ background: 'transparent' }}
         />
+
+        {/* 画布 HUD：图号、比例、刻度、星等图例 */}
+        <div className="hud left-4 top-3 hidden sm:block sm:left-6 sm:top-4">
+          <p className="micro">FIG. 02 — CONSTELLATION MAP</p>
+          <p className="mt-1 font-serif text-[12px] tracking-[0.14em] text-paper-300">
+            知识点依赖星图
+          </p>
+        </div>
+
+        <div className="hud right-4 top-3 text-right sm:right-6 sm:top-4">
+          <p className="micro">SCALE</p>
+          <p className="mono mt-1 text-[11px] tracking-[0.16em] text-paper-300">
+            ×{zoomLabel}
+          </p>
+        </div>
+
+        <div className="hud bottom-8 left-4 hidden sm:block">
+          <div className="flex items-end gap-2">
+            <div className="ruler-x w-24 opacity-60" aria-hidden="true" />
+            <span className="micro pb-0.5">1 UNIT</span>
+          </div>
+        </div>
+
+        <div className="hud bottom-7 right-3 max-w-[calc(100%-1.5rem)] sm:right-6">
+          <StarLegend />
+        </div>
+
+        <div
+          className="hud bottom-8 left-1/2 hidden -translate-x-1/2 md:block"
+          aria-hidden="true"
+        >
+          <span className="micro">
+            {String(nodes.length).padStart(2, '0')} STARS ·{' '}
+            {String(edges.length).padStart(2, '0')} LINKS
+          </span>
+        </div>
 
         {hoverTarget && (
           <div className="pointer-events-none absolute inset-0">

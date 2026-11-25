@@ -56,25 +56,38 @@ export default function TreePage() {
 
   const counts = countByCategory(goal);
   const focusNodeId = searchParams.get('focus');
+  const edgeCount = goal.nodes.reduce(
+    (total, node) => total + node.prerequisites.length,
+    0,
+  );
 
   return (
     <main className="flex h-full flex-col">
-      <header className="glass-panel shrink-0">
-        <div className="flex flex-wrap items-start justify-between gap-3 px-4 pb-3 pt-4 sm:px-6">
+      <header className="shrink-0 border-b border-white/10 bg-ink-950/72 backdrop-blur-md">
+        <div className="flex w-full min-w-0 flex-wrap items-start justify-between gap-4 px-4 pb-3 pt-3.5 sm:px-6">
           <div className="min-w-0">
-            <h1 className="truncate text-lg font-semibold text-star-100">
+            <div className="flex items-center gap-2.5">
+              <span className="micro">CONSTELLATION</span>
+              <span className="h-px w-8 bg-white/15" aria-hidden="true" />
+              <span className="micro">{goal.id.toUpperCase()}</span>
+            </div>
+            <h1 className="display mt-1.5 truncate text-[22px] sm:text-[27px]">
               {goal.title}
             </h1>
-            <p className="mt-0.5 truncate text-[13px] text-star-400">
+            <p className="mt-1 line-clamp-2 max-w-[62ch] text-[12.5px] leading-relaxed text-paper-400 sm:truncate">
               {goal.subtitle}
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-2">
+            <div
+              className="flex items-center"
+              role="group"
+              aria-label="画布缩放"
+            >
               <button
                 type="button"
-                className="icon-button"
+                className="btn btn-square border-r-0"
                 title="放大"
                 aria-label="放大"
                 onClick={() => handleRef.current?.zoomIn()}
@@ -83,7 +96,7 @@ export default function TreePage() {
               </button>
               <button
                 type="button"
-                className="icon-button"
+                className="btn btn-square border-r-0"
                 title="缩小"
                 aria-label="缩小"
                 onClick={() => handleRef.current?.zoomOut()}
@@ -92,7 +105,7 @@ export default function TreePage() {
               </button>
               <button
                 type="button"
-                className="icon-button"
+                className="btn btn-square border-r-0"
                 title="适应画布"
                 aria-label="适应画布"
                 onClick={() => handleRef.current?.fitView()}
@@ -101,7 +114,7 @@ export default function TreePage() {
               </button>
               <button
                 type="button"
-                className="icon-button"
+                className="btn btn-square"
                 title="重置视图"
                 aria-label="重置视图"
                 onClick={() => handleRef.current?.reset()}
@@ -110,16 +123,19 @@ export default function TreePage() {
               </button>
             </div>
 
-            <Link to="/" className="ghost-button">
+            <span className="mx-1 hidden h-6 w-px bg-white/12 sm:block" aria-hidden="true" />
+
+            <Link to="/" className="btn">
               重新搜索
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-y-2 px-4 pb-3 sm:px-6">
+        <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-white/[0.06] px-4 py-2 sm:px-6">
           <CategoryLegend categories={goal.categories} counts={counts} />
-          <p className="text-[11.5px] text-star-400/70">
-            分析基于本地预设知识库，未调用大模型
+          <p className="mono hidden text-[10px] tracking-[0.16em] text-paper-500 sm:block">
+            {String(goal.nodes.length).padStart(2, '0')} STARS /{' '}
+            {String(edgeCount).padStart(2, '0')} LINKS · 本地知识库
           </p>
         </div>
       </header>

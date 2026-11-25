@@ -11,53 +11,71 @@ export default {
           '"Hiragino Sans GB"',
           'sans-serif',
         ],
+        // 展示用衬线：思源宋体优先，回退到系统宋体
+        serif: [
+          '"Noto Serif SC"',
+          '"Source Han Serif SC"',
+          '"Songti SC"',
+          'STSong',
+          'SimSun',
+          'Georgia',
+          'serif',
+        ],
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Consolas',
+          '"Liberation Mono"',
+          'monospace',
+        ],
       },
       colors: {
-        // 近黑底，带极轻的蓝紫倾向
-        void: {
-          900: '#05060F',
-          800: '#090B1A',
-          700: '#0E1124',
-          600: '#141834',
+        // 宇宙组曲的星图底色：近黑，带一点点冷灰
+        ink: {
+          950: '#04050A',
+          900: '#070910',
+          800: '#0B0E17',
+          700: '#11151F',
+          600: '#171C28',
         },
-        // 主强调：紫罗兰（取自参考图 H≈255-260）
-        nebula: {
-          300: '#C4A4FF',
-          400: '#A855F7',
-          500: '#8B5CF6',
-          600: '#7C3AED',
-          700: '#5B21B6',
+        // 纸白：标题、正文、细线的来源色
+        paper: {
+          50: '#F8F5EC',
+          100: '#EFEADE',
+          200: '#D9D3C3',
+          300: '#A9A496',
+          400: '#7B776C',
+          500: '#55524A',
         },
-        // 辅助：偏蓝的星云色
-        comet: {
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
+        // 黄铜金：强调、链路点亮、档案编号
+        gold: {
+          200: '#EFDCB4',
+          300: '#DEC592',
+          400: '#C9A96A',
+          500: '#A8894F',
+          600: '#7D6539',
         },
-        star: {
-          100: '#F4F1FF',
-          200: '#D8CEF0',
-          300: '#A79FC4',
-          400: '#7A7399',
-          500: '#524D6B',
+        // 冷青：次级信息
+        ice: {
+          300: '#A9CDD8',
+          400: '#82B0C0',
+          500: '#5D8B9C',
         },
-        edge: {
-          subtle: 'rgba(168, 85, 247, 0.12)',
-          soft: 'rgba(168, 85, 247, 0.22)',
-          strong: 'rgba(168, 85, 247, 0.45)',
+        // 警示：低饱和的赤陶色，避免破坏整体克制感
+        ember: {
+          300: '#DCA191',
+          400: '#C2745F',
         },
       },
-      boxShadow: {
-        glass:
-          '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 8px 32px -8px rgba(0,0,0,0.65)',
-        glow: '0 0 24px -4px rgba(168, 85, 247, 0.45)',
-        'glow-lg': '0 0 48px -8px rgba(168, 85, 247, 0.55)',
+      letterSpacing: {
+        widest2: '0.22em',
       },
       maxWidth: {
         prose72: '72ch',
       },
-      backdropBlur: {
-        xs: '2px',
+      transitionTimingFunction: {
+        'out-soft': 'cubic-bezier(0.22, 0.61, 0.36, 1)',
       },
     },
   },

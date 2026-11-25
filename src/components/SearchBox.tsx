@@ -38,16 +38,19 @@ export default function SearchBox({
           想学什么
         </label>
 
-        {/* 输入框外侧的紫色光晕 */}
-        <div
+        <span
           aria-hidden="true"
-          className="pointer-events-none absolute -inset-x-6 -inset-y-8 -z-10 opacity-70"
-          style={{
-            background:
-              'radial-gradient(28rem 10rem at 50% 50%, rgba(124,58,237,0.32), transparent 70%)',
-            filter: 'blur(10px)',
-          }}
-        />
+          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-paper-400"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8.2" stroke="currentColor" strokeWidth="1" />
+            <path
+              d="M12 3.8C12.6 9 15 11.4 20.2 12C15 12.6 12.6 15 12 20.2C11.4 15 9 12.6 3.8 12C9 11.4 11.4 9 12 3.8Z"
+              fill="currentColor"
+              opacity="0.8"
+            />
+          </svg>
+        </span>
 
         <input
           id="goal-input"
@@ -58,32 +61,33 @@ export default function SearchBox({
           placeholder="例如：AI 大模型"
           aria-invalid={showEmptyHint}
           onChange={(event) => onChange(event.target.value)}
-          className="h-14 w-full rounded-full border border-white/12 bg-white/[0.05]
-            pl-6 pr-[150px] text-base text-star-100 shadow-glass backdrop-blur-xl
-            transition-colors duration-150 placeholder:text-star-400
-            hover:border-nebula-400/40
-            focus:border-nebula-400/70 focus:outline-none focus:ring-4
-            focus:ring-nebula-500/20"
+          className="field min-w-0"
         />
-        <button type="submit" className="primary-button absolute right-2 top-2 h-10">
-          生成学习路径
+        <button
+          type="submit"
+          className="btn btn-gold absolute right-2 top-2 h-10"
+        >
+          <span className="hidden sm:inline">开始测绘</span>
+          <span className="sm:hidden">测绘</span>
           <span aria-hidden="true">→</span>
         </button>
       </form>
 
-      <div className="mt-3 min-h-[20px] text-center" aria-live="polite">
+      <div className="mt-2 min-h-[18px]" aria-live="polite">
         {showEmptyHint && (
-          <p className="text-sm text-rose-300">先告诉我你想学什么</p>
+          <p className="mono text-[11px] tracking-[0.12em] text-ember-300">
+            · 先告诉我你想学什么
+          </p>
         )}
       </div>
 
-      <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-sm text-star-400">
-        <span>试试：</span>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <span className="micro mr-1">SAMPLE</span>
         {EXAMPLES.map((example) => (
           <button
             key={example}
             type="button"
-            className="pill-button"
+            className="chip"
             onClick={() => {
               onChange(example);
               onSubmit(example);

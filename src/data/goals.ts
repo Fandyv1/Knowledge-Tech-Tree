@@ -7,12 +7,13 @@ import { llmApplicationNodes } from './nodes/llm-application';
 import { engineeringNodes } from './nodes/engineering';
 
 const aiLlmCategories: Category[] = [
-  { id: 'math', name: '数学基础', color: '#818CF8', colorSoft: 'rgba(129, 140, 248, 0.16)' },
-  { id: 'programming', name: '编程与工具', color: '#38BDF8', colorSoft: 'rgba(56, 189, 248, 0.16)' },
-  { id: 'ml', name: '机器学习', color: '#34D399', colorSoft: 'rgba(52, 211, 153, 0.16)' },
-  { id: 'llm-core', name: '大模型核心', color: '#C084FC', colorSoft: 'rgba(192, 132, 252, 0.18)' },
-  { id: 'engineering', name: '工程化', color: '#F472B6', colorSoft: 'rgba(244, 114, 182, 0.16)' },
-  { id: 'practice', name: '实践与评测', color: '#FB923C', colorSoft: 'rgba(251, 146, 60, 0.16)' },
+  // 星图色板：黄铜金 / 冷青 / 灰绿 / 雾紫 / 玫瑰 / 赤陶，统一降饱和
+  { id: 'math', name: '数学基础', color: '#C9A96A', colorSoft: 'rgba(201, 169, 106, 0.14)' },
+  { id: 'programming', name: '编程与工具', color: '#82B0C0', colorSoft: 'rgba(130, 176, 192, 0.14)' },
+  { id: 'ml', name: '机器学习', color: '#8FBFA0', colorSoft: 'rgba(143, 191, 160, 0.14)' },
+  { id: 'llm-core', name: '大模型核心', color: '#A98BD0', colorSoft: 'rgba(169, 139, 208, 0.15)' },
+  { id: 'engineering', name: '工程化', color: '#CE8FA6', colorSoft: 'rgba(206, 143, 166, 0.14)' },
+  { id: 'practice', name: '实践与评测', color: '#D19468', colorSoft: 'rgba(209, 148, 104, 0.14)' },
 ];
 
 const aiLlmNodes: KnowledgeNode[] = [

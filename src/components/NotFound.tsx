@@ -11,19 +11,29 @@ export default function NotFound({
 }: NotFoundProps) {
   return (
     <main className="relative flex min-h-full items-center justify-center px-5 py-20">
-      <div className="w-full max-w-[440px] text-center">
-        <p
-          className="bg-clip-text text-[64px] font-semibold leading-none text-transparent"
-          style={{
-            backgroundImage:
-              'linear-gradient(135deg, rgba(216,206,240,0.5), rgba(124,58,237,0.65))',
-          }}
-        >
+      <div className="w-full max-w-[460px]">
+        <div className="flex items-center gap-3">
+          <span className="micro-strong">SIGNAL LOST</span>
+          <span className="h-px flex-1 bg-white/12" aria-hidden="true" />
+          <span className="micro">NO COORDINATE</span>
+        </div>
+
+        <p className="display mt-7 text-[72px] leading-none tracking-[0.12em] text-paper-100">
           404
         </p>
-        <h1 className="mt-5 text-xl font-semibold text-star-100">{title}</h1>
-        <p className="mt-2.5 text-sm leading-relaxed text-star-400">{detail}</p>
-        <Link to="/" className="primary-button mt-8 py-2.5">
+
+        <div className="rule-diamond my-6" aria-hidden="true">
+          <span />
+        </div>
+
+        <h1 className="font-serif text-[22px] tracking-[0.06em] text-paper-100">
+          {title}
+        </h1>
+        <p className="mt-2.5 text-[13px] leading-relaxed text-paper-400">
+          {detail}
+        </p>
+
+        <Link to="/" className="btn btn-gold mt-8">
           <span aria-hidden="true">←</span>
           返回首页
         </Link>
