@@ -2,7 +2,14 @@ import type { LearningGoal } from '../types';
 
 export interface ValidationIssue {
   goalId: string;
-  kind: 'duplicate-node-id' | 'missing-prerequisite' | 'cycle' | 'unknown-category';
+  kind:
+    | 'duplicate-goal-id'
+    | 'duplicate-node-id'
+    | 'duplicate-category'
+    | 'missing-prerequisite'
+    | 'cycle'
+    | 'unknown-category'
+    | 'unknown-resource-type';
   detail: string;
 }
 
@@ -13,7 +20,17 @@ export interface ValidationIssue {
 export function collectGoalIssues(goals: LearningGoal[]): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 
+  const goalIds = new Set<string>();
   for (const goal of goals) {
+    if (goalIds.has(goal.id)) {
+      issues.push({
+        goalId: goal.id,
+        kind: 'duplicate-goal-id',
+        detail: `学习目标 id 重复：${goal.id}`,
+      });
+    }
+    goalIds.add(goal.id);
+
     const seen = new Set<string>();
     for (const node of goal.nodes) {
       if (seen.has(node.id)) {
@@ -26,7 +43,17 @@ export function collectGoalIssues(goals: LearningGoal[]): ValidationIssue[] {
       seen.add(node.id);
     }
 
-    const categoryIds = new Set(goal.categories.map((category) => category.id));
+    const categoryIds = new Set<string>();
+    for (const category of goal.categories) {
+      if (categoryIds.has(category.id)) {
+        issues.push({
+          goalId: goal.id,
+          kind: 'duplicate-category',
+          detail: `类别 id 重复：${category.id}`,
+        });
+      }
+      categoryIds.add(category.id);
+    }
     for (const node of goal.nodes) {
       if (!categoryIds.has(node.category)) {
         issues.push({
@@ -34,6 +61,19 @@ export function collectGoalIssues(goals: LearningGoal[]): ValidationIssue[] {
           kind: 'unknown-category',
           detail: `节点 ${node.id} 引用了未定义的类别：${node.category}`,
         });
+      }
+    }
+
+    const resourceTypes = new Set(['article', 'video', 'course', 'book', 'doc', 'paper']);
+    for (const node of goal.nodes) {
+      for (const resource of node.resources) {
+        if (!resourceTypes.has(resource.type)) {
+          issues.push({
+            goalId: goal.id,
+            kind: 'unknown-resource-type',
+            detail: `节点 ${node.id} 的素材类型未知：${resource.type}`,
+          });
+        }
       }
     }
 

@@ -40,8 +40,20 @@ describe('图索引', () => {
   const index = buildGraphIndex(aiLlm);
 
   it('节点数与依赖边数符合预期', () => {
-    expect(aiLlm.nodes).toHaveLength(20);
-    expect(index.edgeCount).toBe(27);
+    expect(aiLlm.nodes).toHaveLength(24);
+    expect(index.edgeCount).toBe(36);
+  });
+
+  it('内置三个学习目标，各 24 个节点', () => {
+    expect(goals.map((goal) => goal.id)).toEqual([
+      'ai-llm',
+      'python-data',
+      'math-exam',
+    ]);
+    for (const goal of goals) {
+      expect(goal.nodes).toHaveLength(24);
+      expect(goal.categories.length).toBeGreaterThanOrEqual(5);
+    }
   });
 
   it('起点深度为 0 且确实无前置', () => {

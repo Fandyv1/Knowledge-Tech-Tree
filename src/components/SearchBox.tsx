@@ -1,12 +1,14 @@
 import { useEffect, useRef } from 'react';
 
-const EXAMPLES = ['AI 大模型', '大语言模型', 'LLM'];
+const DEFAULT_EXAMPLES = ['AI 大模型', 'Python 数据分析', '考研数学'];
 
 interface SearchBoxProps {
   value: string;
   shakeToken: number;
   onChange: (value: string) => void;
   onSubmit: (value?: string) => void;
+  /** 示例 chips，默认展示三个内置学习目标 */
+  examples?: string[];
 }
 
 export default function SearchBox({
@@ -14,7 +16,9 @@ export default function SearchBox({
   shakeToken,
   onChange,
   onSubmit,
+  examples,
 }: SearchBoxProps) {
+  const samples = examples && examples.length > 0 ? examples : DEFAULT_EXAMPLES;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -83,7 +87,7 @@ export default function SearchBox({
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <span className="micro mr-1">SAMPLE</span>
-        {EXAMPLES.map((example) => (
+        {samples.map((example) => (
           <button
             key={example}
             type="button"
@@ -101,4 +105,4 @@ export default function SearchBox({
   );
 }
 
-export { EXAMPLES };
+export { DEFAULT_EXAMPLES };

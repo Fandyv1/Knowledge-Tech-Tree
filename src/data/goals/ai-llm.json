@@ -1,0 +1,1272 @@
+{
+  "id": "ai-llm",
+  "title": "AI 大模型",
+  "subtitle": "从数学与编程基础出发，一路走到预训练、对齐、RAG 与服务化部署",
+  "aliases": [
+    "ai大模型",
+    "大模型",
+    "llm",
+    "大语言模型",
+    "ai",
+    "人工智能",
+    "机器学习",
+    "深度学习",
+    "gpt",
+    "transformer",
+    "模型",
+    "largelanguagemodel",
+    "large-language-model",
+    "生成式ai",
+    "aigc",
+    "神经网络",
+    "chatgpt",
+    "语言模型"
+  ],
+  "searchHints": [
+    "AI",
+    "大模型",
+    "LLM"
+  ],
+  "categories": [
+    {
+      "id": "math",
+      "name": "数学基础",
+      "color": "#C9A96A",
+      "colorSoft": "rgba(201, 169, 106, 0.14)"
+    },
+    {
+      "id": "programming",
+      "name": "编程与工具",
+      "color": "#82B0C0",
+      "colorSoft": "rgba(130, 176, 192, 0.14)"
+    },
+    {
+      "id": "ml",
+      "name": "机器学习",
+      "color": "#8FBFA0",
+      "colorSoft": "rgba(143, 191, 160, 0.14)"
+    },
+    {
+      "id": "llm-core",
+      "name": "大模型核心",
+      "color": "#A98BD0",
+      "colorSoft": "rgba(169, 139, 208, 0.15)"
+    },
+    {
+      "id": "engineering",
+      "name": "工程化",
+      "color": "#CE8FA6",
+      "colorSoft": "rgba(206, 143, 166, 0.14)"
+    },
+    {
+      "id": "practice",
+      "name": "实践与评测",
+      "color": "#D19468",
+      "colorSoft": "rgba(209, 148, 104, 0.14)"
+    },
+    {
+      "id": "multimodal",
+      "name": "多模态",
+      "color": "#7DB4D6",
+      "colorSoft": "rgba(125, 180, 214, 0.14)"
+    },
+    {
+      "id": "inference",
+      "name": "推理与部署",
+      "color": "#C2A178",
+      "colorSoft": "rgba(194, 161, 120, 0.14)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "python",
+      "title": "Python 编程基础",
+      "category": "programming",
+      "summary": "AI 领域事实上的通用语言，掌握语法、数据结构与科学计算库。",
+      "why": "所有模型代码与数据脚本的载体。",
+      "description": [
+        "Python 成为 AI 默认语言，不是因为它快，而是因为它把“胶水”做到了极致：底层算力交给 C / CUDA 实现的库，上层用极低的语法噪音把这些能力粘合起来。你写的一行 model.train()，背后是数万行 C++，但你只需要关心语义。",
+        "这个节点需要建立三层能力：语言层（类型、函数、类、装饰器、上下文管理器、生成器）、数据层（NumPy 的 ndarray 与广播机制、Pandas 的 DataFrame 操作）、工程层（虚拟环境、包管理、调试与性能剖析）。",
+        "其中 NumPy 的广播规则值得单独投入时间。后续读 PyTorch 代码时遇到的绝大多数报错都是形状不匹配，根源就是对广播理解不牢。能在脑子里跑通 (B, T, C) 这类张量形状，比记住 API 名字重要得多。"
+      ],
+      "purposes": [
+        "编写与调试模型训练、推理脚本",
+        "用 NumPy / Pandas 完成数据清洗与特征分析",
+        "读懂 PyTorch、Hugging Face 等开源项目源码",
+        "搭建数据处理流水线与实验管理工具",
+        "快速验证算法想法的原型实现"
+      ],
+      "resources": [
+        {
+          "title": "Python 官方教程（中文）",
+          "type": "doc",
+          "url": "https://docs.python.org/zh-cn/3/tutorial/",
+          "note": "语法与标准库的权威参考，查疑时的第一落点。"
+        },
+        {
+          "title": "NumPy: the absolute basics for beginners",
+          "type": "doc",
+          "url": "https://numpy.org/doc/stable/user/absolute_beginners.html",
+          "note": "重点理解 ndarray 与广播机制，后续张量操作的基石。"
+        },
+        {
+          "title": "Pandas · 10 minutes to pandas",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/10min.html",
+          "note": "快速掌握 DataFrame 的筛选、聚合与合并。"
+        },
+        {
+          "title": "CS50P: Introduction to Programming with Python",
+          "type": "course",
+          "url": "https://cs50.harvard.edu/python/",
+          "note": "哈佛免费课程，适合系统补齐编程基本功。"
+        }
+      ],
+      "zhihuKeywords": [
+        "Python 入门 学习路线",
+        "NumPy 广播机制 理解"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "linear-algebra",
+      "title": "线性代数",
+      "category": "math",
+      "summary": "向量、矩阵、特征分解与矩阵求导，神经网络的计算语言。",
+      "why": "大模型每一层本质都是矩阵运算。",
+      "description": [
+        "把神经网络拆开，里面只有两样东西：矩阵乘法和非线性函数。线性代数就是描述前者的语言。当你看到注意力机制里的 Q 乘 K 转置再乘 V，看到的其实是“用一组向量去查询另一组向量的相似度，再按相似度加权求和”——这是几何直觉，不是符号游戏。",
+        "需要牢固掌握：向量空间与基、矩阵乘法的几何意义（线性变换的复合）、转置与内积、矩阵的秩、特征值与特征向量、奇异值分解。其中内积与余弦相似度直接对应向量检索，奇异值分解则是理解低秩近似、进而理解 LoRA 微调的前提。",
+        "工程实践中最常用但课堂上最少讲的是矩阵求导与形状推导。反向传播的链式法则落到代码里，就是一连串矩阵乘法的转置配平，建议专门练习推导损失对权重矩阵的梯度形状。"
+      ],
+      "purposes": [
+        "理解全连接层与注意力机制的数学本质",
+        "推导反向传播中的梯度形状与计算流程",
+        "理解词嵌入的相似度计算与向量检索原理",
+        "理解 LoRA 等低秩微调方法的降维思想",
+        "分析模型参数量与计算量（FLOPs）的来源"
+      ],
+      "resources": [
+        {
+          "title": "Essence of Linear Algebra（3Blue1Brown）",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/linear-algebra",
+          "note": "用几何直觉讲透线性变换，建议作为入门第一站。"
+        },
+        {
+          "title": "MIT 18.06 Linear Algebra",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+          "note": "Gilbert Strang 经典课程，体系完整。"
+        },
+        {
+          "title": "Mathematics for Machine Learning",
+          "type": "book",
+          "url": "https://mml-book.github.io/",
+          "note": "免费电子书，第 2–4 章专讲机器学习所需的线性代数。"
+        },
+        {
+          "title": "The Matrix Cookbook",
+          "type": "doc",
+          "url": "https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf",
+          "note": "矩阵求导公式速查手册，推导时常备。"
+        }
+      ],
+      "zhihuKeywords": [
+        "线性代数 机器学习 学到什么程度",
+        "矩阵求导 反向传播"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "probability",
+      "title": "概率与统计",
+      "category": "math",
+      "summary": "分布、期望、最大似然与贝叶斯思想，刻画模型的不确定性。",
+      "why": "语言模型本质是预测下一个词的概率分布。",
+      "description": [
+        "大语言模型的输出不是一个词，而是词表上的一个概率分布。训练目标是最大化真实序列的似然，采样时的 temperature、top-k、top-p 全都是在操纵这个分布的形状。不懂概率，这些参数就只能靠玄学调。",
+        "核心概念：随机变量与常见分布（伯努利、类别分布、高斯）、条件概率与贝叶斯公式、期望与方差、最大似然估计、KL 散度与交叉熵。其中交叉熵损失是语言模型训练的唯一目标函数，必须能从最大似然估计推导出来。",
+        "统计部分的重点不在假设检验，而在“如何判断实验结果可信”。模型 A 比模型 B 高 0.3 分意味着什么？这需要方差估计与置信区间的直觉，否则评测环节很容易自欺欺人。"
+      ],
+      "purposes": [
+        "理解交叉熵损失函数的来源与含义",
+        "理解 temperature、top-p 采样对输出分布的影响",
+        "理解困惑度作为语言模型指标的意义",
+        "正确设计评测实验并判断结果是否显著",
+        "为 RLHF 中的策略梯度与奖励建模打底"
+      ],
+      "resources": [
+        {
+          "title": "Mathematics for Machine Learning · 第 6 章",
+          "type": "book",
+          "url": "https://mml-book.github.io/",
+          "note": "概率与分布一章紧扣机器学习需求，无冗余内容。"
+        },
+        {
+          "title": "MIT 6.041 Probabilistic Systems Analysis",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/",
+          "note": "MIT 概率论公开课，讲解清晰、习题充足。"
+        },
+        {
+          "title": "Seeing Theory：可视化概率统计",
+          "type": "article",
+          "url": "https://seeing-theory.brown.edu/",
+          "note": "布朗大学交互式可视化，快速建立分布直觉。"
+        }
+      ],
+      "zhihuKeywords": [
+        "交叉熵损失 最大似然 关系",
+        "困惑度 perplexity 含义"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "calculus",
+      "title": "微积分与优化基础",
+      "category": "math",
+      "summary": "导数、梯度、链式法则与梯度下降，驱动模型参数更新。",
+      "why": "反向传播与一切优化器的数学根基。",
+      "description": [
+        "训练一个模型，做的事情就是沿着损失函数的负梯度方向挪动参数。微积分提供了“梯度”这个工具，优化理论则回答“该怎么挪”——步长多大、要不要带动量、学习率如何衰减。",
+        "必须掌握：偏导数与梯度、链式法则（反向传播的全部数学内容）、泰勒一阶近似（理解为什么小步长才安全）、凸函数与极值点、梯度下降及其变体 SGD、Momentum、Adam 与 AdamW。",
+        "实践中最有价值的理解是：梯度消失与梯度爆炸不是玄学，而是链式法则中连乘项的数值行为。这直接解释了为什么需要残差连接、层归一化和梯度裁剪——它们都是在给这个连乘式“保号保幅”。"
+      ],
+      "purposes": [
+        "理解反向传播算法的逐层梯度计算",
+        "理解 Adam / AdamW 的更新规则与超参含义",
+        "诊断梯度消失、梯度爆炸与训练不收敛问题",
+        "理解学习率预热与衰减策略的作用",
+        "理解残差连接与归一化为何能稳定深层网络训练"
+      ],
+      "resources": [
+        {
+          "title": "Essence of Calculus（3Blue1Brown）",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/calculus",
+          "note": "建立导数与链式法则的几何直觉。"
+        },
+        {
+          "title": "动手学深度学习 · 优化算法",
+          "type": "book",
+          "url": "https://zh.d2l.ai/chapter_optimization/index.html",
+          "note": "中文开源教材，优化算法章节配可运行代码。"
+        },
+        {
+          "title": "Adam: A Method for Stochastic Optimization",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/1412.6980",
+          "note": "Adam 原论文，理解一阶、二阶动量估计的设计。"
+        }
+      ],
+      "zhihuKeywords": [
+        "梯度下降 原理 通俗理解",
+        "Adam 优化器 为什么有效"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "ml-basics",
+      "title": "机器学习基础",
+      "category": "ml",
+      "summary": "监督学习、损失函数、过拟合与泛化，建立建模方法论。",
+      "why": "大模型仍遵循机器学习的基本范式。",
+      "description": [
+        "在冲向 Transformer 之前，必须先建立一套可靠的建模直觉：什么是训练集与测试集的分布差异、什么是偏差与方差的权衡、为什么模型在训练集上完美却在真实场景崩溃。这些问题在大模型时代没有消失，只是换了尺度。",
+        "核心内容包括：监督学习与无监督学习的区别、线性回归与逻辑回归（最小的完整模型）、损失函数与正则化、训练 / 验证 / 测试集的划分、交叉验证、过拟合与欠拟合的识别与应对、特征工程与评价指标（准确率、精确率、召回率、F1、AUC）。",
+        "一个常被低估的收获是“基线意识”。任何复杂模型都需要和简单基线对比才有意义。大模型项目里大量的无效优化，本质是因为没人先跑一个逻辑回归或关键词匹配的基线。"
+      ],
+      "purposes": [
+        "判断一个任务是否适合用机器学习解决",
+        "正确划分数据集并识别数据泄漏",
+        "诊断过拟合、欠拟合并选择应对策略",
+        "为复杂模型建立可对比的简单基线",
+        "选择与业务目标匹配的评价指标"
+      ],
+      "resources": [
+        {
+          "title": "动手学深度学习 · 线性神经网络",
+          "type": "book",
+          "url": "https://zh.d2l.ai/chapter_linear-networks/index.html",
+          "note": "中文开源教材，从线性回归讲到 softmax 分类。"
+        },
+        {
+          "title": "scikit-learn User Guide",
+          "type": "doc",
+          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "note": "经典算法的权威文档，适合边读边动手。"
+        },
+        {
+          "title": "CS229: Machine Learning（Stanford）",
+          "type": "course",
+          "url": "https://cs229.stanford.edu/",
+          "note": "偏理论推导，想打扎实数学基础可选。"
+        },
+        {
+          "title": "Rules of Machine Learning（Google）",
+          "type": "article",
+          "url": "https://developers.google.com/machine-learning/guides/rules-of-ml",
+          "note": "Google 工程实践总结，43 条规则极具实战价值。"
+        }
+      ],
+      "zhihuKeywords": [
+        "机器学习 入门 学习路线",
+        "过拟合 欠拟合 如何判断"
+      ],
+      "prerequisites": [
+        "linear-algebra",
+        "probability",
+        "python"
+      ]
+    },
+    {
+      "id": "neural-net",
+      "title": "神经网络基础",
+      "category": "ml",
+      "summary": "前馈网络、激活函数、反向传播与正则化技巧。",
+      "why": "Transformer 是神经网络的一种特化结构。",
+      "description": [
+        "神经网络的核心思想简单到近乎粗暴：把线性变换和非线性激活函数交替堆叠起来，就能逼近相当复杂的函数。难点从来不在表达能力，而在“怎么把它训练起来”。",
+        "需要掌握：感知机与多层感知机的结构、常见激活函数（ReLU、GELU、SiLU）及其选择理由、前向传播与反向传播的完整计算过程、权重初始化（Xavier、Kaiming）、批归一化与层归一化、Dropout 与权重衰减、残差连接。",
+        "建议动手从零实现一个两层网络的前向与反向传播，只用 NumPy，不借助自动微分。这个练习的价值极高：它会把链式法则、形状对齐、数值稳定性这些抽象概念变成肌肉记忆，之后看任何框架代码都不再是黑箱。"
+      ],
+      "purposes": [
+        "理解深度模型的前向与反向计算流程",
+        "选择合适的激活函数与初始化方案",
+        "用归一化与残差连接稳定深层网络训练",
+        "通过 Dropout、权重衰减等手段抑制过拟合",
+        "为理解 Transformer 的层结构做准备"
+      ],
+      "resources": [
+        {
+          "title": "Neural Networks（3Blue1Brown）",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/neural-networks",
+          "note": "可视化讲解网络结构与反向传播直觉。"
+        },
+        {
+          "title": "Neural Networks: Zero to Hero（Karpathy）",
+          "type": "course",
+          "url": "https://karpathy.ai/zero-to-hero.html",
+          "note": "从零手写自动微分到 GPT，本路径中性价比最高的课程。"
+        },
+        {
+          "title": "动手学深度学习 · 多层感知机",
+          "type": "book",
+          "url": "https://zh.d2l.ai/chapter_multilayer-perceptrons/index.html",
+          "note": "含过拟合、初始化、数值稳定性的系统讲解。"
+        },
+        {
+          "title": "Deep Learning（Goodfellow 等）",
+          "type": "book",
+          "url": "https://www.deeplearningbook.org/",
+          "note": "免费在线阅读的深度学习圣经，适合查阅理论细节。"
+        }
+      ],
+      "zhihuKeywords": [
+        "反向传播 推导 详解",
+        "层归一化 批归一化 区别"
+      ],
+      "prerequisites": [
+        "ml-basics",
+        "calculus"
+      ]
+    },
+    {
+      "id": "pytorch",
+      "title": "深度学习框架 PyTorch",
+      "category": "programming",
+      "summary": "张量操作、自动微分、nn.Module 与训练循环工程实践。",
+      "why": "大模型训练与推理的主流工具链。",
+      "description": [
+        "PyTorch 的设计哲学是“Python 优先”：计算图动态构建，调试体验接近普通 Python 代码。这让它在研究领域几乎一统天下，而大模型生态（Hugging Face、DeepSpeed、vLLM）也全部构建在它之上。",
+        "需要掌握的能力层次：张量操作与设备管理（CPU / GPU / 显存）、autograd 自动微分机制与计算图、nn.Module 的组织方式、Dataset 与 DataLoader、优化器与学习率调度器、完整训练循环的编写、混合精度训练（AMP）、模型保存与加载、分布式训练入门（DDP）。",
+        "强烈建议把注意力放在显存管理与形状调试上。实际工作中遇到的问题八成是 CUDA out of memory 和 shape mismatch，而不是算法本身。掌握梯度累积、梯度检查点、torch.cuda 显存统计这些工具，比多读一篇论文更有产出。"
+      ],
+      "purposes": [
+        "实现自定义模型结构与完整训练循环",
+        "使用 autograd 调试梯度与排查数值问题",
+        "通过混合精度与梯度累积在有限显存下训练",
+        "加载、微调并保存 Hugging Face 上的开源模型",
+        "为分布式训练与推理优化打下工具基础"
+      ],
+      "resources": [
+        {
+          "title": "PyTorch Tutorials",
+          "type": "doc",
+          "url": "https://pytorch.org/tutorials/",
+          "note": "官方教程，Learn the Basics 一节覆盖全部核心概念。"
+        },
+        {
+          "title": "PyTorch 官方文档",
+          "type": "doc",
+          "url": "https://pytorch.org/docs/stable/index.html",
+          "note": "API 权威参考，autograd 与 cuda 章节值得细读。"
+        },
+        {
+          "title": "Hugging Face Transformers 文档",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/transformers/index",
+          "note": "开源模型加载与微调的事实标准库。"
+        },
+        {
+          "title": "nanoGPT",
+          "type": "article",
+          "url": "https://github.com/karpathy/nanoGPT",
+          "note": "Karpathy 的极简 GPT 实现，约 300 行读懂训练全流程。"
+        }
+      ],
+      "zhihuKeywords": [
+        "PyTorch 入门 教程 推荐",
+        "CUDA out of memory 解决"
+      ],
+      "prerequisites": [
+        "python",
+        "neural-net"
+      ]
+    },
+    {
+      "id": "attention",
+      "title": "注意力机制",
+      "category": "llm-core",
+      "summary": "Query-Key-Value 的加权求和，让模型动态聚焦相关信息。",
+      "why": "Transformer 的核心计算单元。",
+      "description": [
+        "注意力机制回答了一个具体问题：处理“它”这个词时，模型应该参考句子里的哪些词？传统 RNN 只能顺序传递信息，距离越远衰减越厉害；注意力机制让任意两个位置直接相连，距离不再是障碍。",
+        "机制本身可以用一句话概括：把输入投影成 Query、Key、Value 三组向量，用 Query 和所有 Key 做内积得到相似度分数，缩放后经 softmax 变成权重，再用这个权重对 Value 加权求和。其中除以根号 d_k 的缩放不是装饰——它防止维度升高时内积方差过大导致 softmax 饱和、梯度消失。",
+        "进阶需要理解：多头注意力为什么有效（在不同子空间并行建模不同关系）、自注意力与交叉注意力的区别、因果掩码如何保证自回归生成不偷看未来、以及注意力复杂度为序列长度平方这一根本瓶颈——它是后续所有长上下文优化工作的起点。"
+      ],
+      "purposes": [
+        "理解 Transformer 每一层究竟在计算什么",
+        "理解多头注意力的参数量与计算量构成",
+        "理解因果掩码与自回归生成的关系",
+        "分析长上下文场景下的显存与算力瓶颈",
+        "为理解 FlashAttention 等优化方案做准备"
+      ],
+      "resources": [
+        {
+          "title": "Attention Is All You Need",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/1706.03762",
+          "note": "原始论文，第 3.2 节是注意力机制的权威定义。"
+        },
+        {
+          "title": "The Illustrated Transformer",
+          "type": "article",
+          "url": "https://jalammar.github.io/illustrated-transformer/",
+          "note": "Jay Alammar 的图解长文，理解注意力的最佳辅助材料。"
+        },
+        {
+          "title": "Visualizing Attention, a Transformer's Heart",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/lessons/attention",
+          "note": "3Blue1Brown 的可视化讲解，几何直觉清晰。"
+        }
+      ],
+      "zhihuKeywords": [
+        "注意力机制 原理 详解",
+        "为什么 注意力 除以 根号dk"
+      ],
+      "prerequisites": [
+        "neural-net",
+        "linear-algebra"
+      ]
+    },
+    {
+      "id": "tokenization",
+      "title": "分词与 Tokenizer",
+      "category": "llm-core",
+      "summary": "BPE 等子词算法把文本切成 token，决定模型的输入粒度。",
+      "why": "它决定上下文长度、成本与多语言表现。",
+      "description": [
+        "模型不认识文字，只认识整数。Tokenizer 负责把字符串切成 token 序列并映射为 id，这一步看似朴素，却直接决定了上下文窗口能装多少内容、API 调用花多少钱、以及模型在中文等非英语语言上的效率。",
+        "主流方案都是子词（subword）级别：BPE 从字符开始反复合并最高频的相邻对，WordPiece 按似然增益合并，Unigram 从大词表反向剪枝，SentencePiece 则提供了无需预分词的统一实现。字节级 BPE（byte-level BPE）进一步保证任何 UTF-8 文本都不会出现未知 token。",
+        "理解 Tokenizer 能解释许多“模型为什么犯傻”的现象：数字被切成奇怪的片段导致算术出错、中文单字消耗的 token 数远多于英文单词、字符串反转任务表现糟糕。这些都不是推理能力问题，而是输入粒度问题。"
+      ],
+      "purposes": [
+        "准确估算文本的 token 数与 API 调用成本",
+        "解释模型在数字、罕见词上的异常行为",
+        "为特定领域或语言训练、扩展自定义词表",
+        "设计 RAG 的文本切块策略与长度控制",
+        "排查多语言场景下的上下文效率问题"
+      ],
+      "resources": [
+        {
+          "title": "Hugging Face · Tokenizers 教程",
+          "type": "doc",
+          "url": "https://huggingface.co/learn/llm-course/chapter6/1",
+          "note": "系统讲解 BPE、WordPiece、Unigram 的差异与训练方式。"
+        },
+        {
+          "title": "Let's build the GPT Tokenizer（Karpathy）",
+          "type": "video",
+          "url": "https://www.youtube.com/watch?v=zduSFxRajkE",
+          "note": "从零实现 BPE，讲清所有工程细节与坑点。"
+        },
+        {
+          "title": "Neural Machine Translation of Rare Words with Subword Units",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/1508.07909",
+          "note": "BPE 应用于 NLP 的奠基论文。"
+        },
+        {
+          "title": "tiktoken",
+          "type": "doc",
+          "url": "https://github.com/openai/tiktoken",
+          "note": "OpenAI 官方分词库，可直接用于 token 计数。"
+        }
+      ],
+      "zhihuKeywords": [
+        "BPE 分词 原理",
+        "tokenizer 中文 token 消耗"
+      ],
+      "prerequisites": [
+        "python"
+      ]
+    },
+    {
+      "id": "transformer",
+      "title": "Transformer 架构",
+      "category": "llm-core",
+      "summary": "注意力、前馈层、残差与归一化堆叠成的可扩展骨干网络。",
+      "why": "几乎所有现代大模型的统一骨架。",
+      "description": [
+        "Transformer 把注意力机制组装成了一个可以无限堆叠的标准块：多头自注意力负责跨位置聚合信息，逐位置前馈网络负责提升表示容量，残差连接与层归一化保证梯度能穿透几十甚至上百层。架构的真正价值在于高度并行、易于扩展。",
+        "需要掌握的结构细节：编码器 / 解码器与仅解码器（decoder-only）架构的区别与适用场景、位置编码的演进（绝对正弦编码 → 可学习编码 → 旋转位置编码 RoPE → ALiBi）、前归一化（Pre-LN）相比后归一化的训练稳定性优势、前馈层的升维倍数与激活函数选择（GELU、SwiGLU）、KV Cache 在推理阶段的作用。",
+        "现代主流模型（GPT、LLaMA、Qwen 系列）基本都是 decoder-only + RoPE + Pre-RMSNorm + SwiGLU 的组合。理解这些选择背后的权衡，比死记某个模型的层数更有价值。建议对照 nanoGPT 或 LLaMA 源码逐行读一遍。"
+      ],
+      "purposes": [
+        "读懂主流开源大模型的网络结构代码",
+        "估算模型参数量、显存占用与推理算力需求",
+        "理解上下文长度扩展方案的原理与限制",
+        "理解 KV Cache 为何是推理显存的主要开销",
+        "为预训练、微调与推理优化提供结构认知"
+      ],
+      "resources": [
+        {
+          "title": "Attention Is All You Need",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/1706.03762",
+          "note": "Transformer 原论文，架构定义的源头。"
+        },
+        {
+          "title": "The Annotated Transformer",
+          "type": "article",
+          "url": "https://nlp.seas.harvard.edu/annotated-transformer/",
+          "note": "哈佛逐行注释实现，论文与代码对照阅读。"
+        },
+        {
+          "title": "CS224N: NLP with Deep Learning",
+          "type": "course",
+          "url": "https://web.stanford.edu/class/cs224n/",
+          "note": "斯坦福课程，Transformer 与预训练章节质量极高。"
+        },
+        {
+          "title": "LLaMA: Open and Efficient Foundation Language Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2302.13971",
+          "note": "现代 decoder-only 架构的工程选择范本。"
+        }
+      ],
+      "zhihuKeywords": [
+        "Transformer 架构 详解",
+        "RoPE 旋转位置编码 原理"
+      ],
+      "prerequisites": [
+        "attention"
+      ]
+    },
+    {
+      "id": "pretraining",
+      "title": "预训练与 Scaling Law",
+      "category": "llm-core",
+      "summary": "海量语料上的自监督训练，以及参数、数据与算力的配比规律。",
+      "why": "模型的通用能力几乎全部来自这一阶段。",
+      "description": [
+        "预训练的任务简单得出乎意料：预测下一个 token。但当语料规模达到万亿级、参数达到百亿级时，这个朴素目标会催生出语法、常识、推理甚至代码能力——这是大模型最反直觉也最关键的事实。",
+        "Scaling Law 把“规模换能力”变成了可计算的工程问题。Kaplan 等人发现损失随参数量、数据量、算力呈幂律下降；Chinchilla 进一步修正了最优配比，指出当时的模型普遍参数过多而数据不足，给定算力预算下 token 数应约为参数量的 20 倍。这一结论直接改变了整个行业的训练策略。",
+        "工程层面需要理解：数据配比与去重质量常比模型结构更影响最终效果、学习率预热与余弦衰减的调度、分布式训练的并行策略（数据并行、张量并行、流水线并行、ZeRO 显存优化）、以及训练过程中 loss spike 的监控与恢复。"
+      ],
+      "purposes": [
+        "理解大模型通用能力的来源与边界",
+        "依据 Scaling Law 规划算力、数据与参数配比",
+        "评估继续预训练（continual pretraining）的可行性",
+        "理解分布式训练的并行策略与显存优化手段",
+        "判断一个能力问题该用预训练还是微调解决"
+      ],
+      "resources": [
+        {
+          "title": "Scaling Laws for Neural Language Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2001.08361",
+          "note": "Kaplan 等人提出幂律关系的奠基论文。"
+        },
+        {
+          "title": "Training Compute-Optimal Large Language Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2203.15556",
+          "note": "Chinchilla 论文，修正最优参数-数据配比。"
+        },
+        {
+          "title": "Language Models are Few-Shot Learners",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2005.14165",
+          "note": "GPT-3 论文，规模涌现能力的经典实证。"
+        },
+        {
+          "title": "The Llama 3 Herd of Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2407.21783",
+          "note": "工业级预训练全流程的详尽技术报告。"
+        }
+      ],
+      "zhihuKeywords": [
+        "Scaling Law 大模型 规律",
+        "预训练 数据配比 重要性"
+      ],
+      "prerequisites": [
+        "transformer",
+        "pytorch"
+      ]
+    },
+    {
+      "id": "sft",
+      "title": "指令微调 SFT",
+      "category": "llm-core",
+      "summary": "用高质量指令-回答数据，把补全模型变成能听懂指令的助手。",
+      "why": "预训练模型不会对话，靠这步建立交互能力。",
+      "description": [
+        "预训练结束的模型只会续写文本：你问它“中国的首都是哪里”，它可能回一句“这个问题很多人都想知道”。它掌握了知识，却不知道该以何种形式回应。监督微调（SFT）就是用大量「指令 + 理想回答」样本，教会模型“被提问时应该直接回答”这一行为范式。",
+        "关键认知是数据质量远胜数量。LIMA 的实验表明，1000 条精心构造的高质量样本，效果可以超过数万条噪声数据。实践中的重点是：指令多样性覆盖、回答风格一致性、长度分布控制、以及严格的去重与污染检查。",
+        "工程上需要掌握参数高效微调（PEFT）方法。全参数微调一个 70B 模型需要上百 GB 显存，而 LoRA 只训练低秩适配矩阵，QLoRA 进一步配合 4-bit 量化，可以把显存需求压到单卡可承受的范围。这是个人与中小团队能参与大模型定制的技术前提。"
+      ],
+      "purposes": [
+        "把基座模型适配为对话助手或特定任务模型",
+        "构造与清洗高质量指令微调数据集",
+        "用 LoRA / QLoRA 在有限显存下完成微调",
+        "注入领域知识与特定输出格式要求",
+        "为后续偏好对齐阶段提供起始模型"
+      ],
+      "resources": [
+        {
+          "title": "Training language models to follow instructions with human feedback",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2203.02155",
+          "note": "InstructGPT 论文，SFT 与 RLHF 三阶段范式的源头。"
+        },
+        {
+          "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2106.09685",
+          "note": "参数高效微调的代表方法，必读。"
+        },
+        {
+          "title": "Hugging Face PEFT 文档",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/peft/index",
+          "note": "LoRA、QLoRA 等方法的官方实现与示例。"
+        },
+        {
+          "title": "LIMA: Less Is More for Alignment",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2305.11206",
+          "note": "论证数据质量优于数量的关键实验。"
+        }
+      ],
+      "zhihuKeywords": [
+        "SFT 指令微调 数据构造",
+        "LoRA 微调 原理 实践"
+      ],
+      "prerequisites": [
+        "pretraining"
+      ]
+    },
+    {
+      "id": "prompt-engineering",
+      "title": "Prompt 工程",
+      "category": "llm-core",
+      "summary": "通过指令设计、示例与思维链，在不训练的前提下调动模型能力。",
+      "why": "成本最低、见效最快的能力调用方式。",
+      "description": [
+        "Prompt 工程常被误解为“话术技巧”，实际上它是在给定模型权重的条件下，寻找能最大化激活目标能力的输入形式。模型的能力是固定的，但同一个能力可能在某种表述下被唤起、在另一种表述下沉睡。",
+        "已被验证有效的核心技术：清晰的角色与任务定义、少样本示例（few-shot）、思维链（Chain-of-Thought）让模型显式推理、自洽性采样（self-consistency）多次采样取多数、结构化输出约束（JSON Schema）、以及把复杂任务拆解为多步调用。",
+        "工程化的关键在于“把 prompt 当代码管理”：版本化、建立回归测试集、量化每次改动的效果变化。缺少这套机制时，prompt 优化就会退化成不可复现的手工调试，团队协作中尤其致命。"
+      ],
+      "purposes": [
+        "在零训练成本下显著提升任务完成质量",
+        "用思维链提升推理、数学与逻辑任务表现",
+        "约束模型输出为可被程序解析的结构化格式",
+        "设计 RAG 与 Agent 系统的提示模板",
+        "建立 prompt 版本管理与回归评测流程"
+      ],
+      "resources": [
+        {
+          "title": "Chain-of-Thought Prompting Elicits Reasoning",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2201.11903",
+          "note": "思维链提示的奠基论文。"
+        },
+        {
+          "title": "OpenAI · Prompt engineering 指南",
+          "type": "doc",
+          "url": "https://platform.openai.com/docs/guides/prompt-engineering",
+          "note": "官方实践建议，覆盖策略与常见反模式。"
+        },
+        {
+          "title": "Anthropic · Prompt engineering 文档",
+          "type": "doc",
+          "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
+          "note": "结构化提示与长上下文组织的系统方法。"
+        },
+        {
+          "title": "Prompt Engineering Guide",
+          "type": "article",
+          "url": "https://www.promptingguide.ai/zh",
+          "note": "开源中文指南，技术清单完整、示例丰富。"
+        }
+      ],
+      "zhihuKeywords": [
+        "Prompt 工程 技巧",
+        "思维链 CoT 为什么有效"
+      ],
+      "prerequisites": [
+        "pretraining"
+      ]
+    },
+    {
+      "id": "rlhf",
+      "title": "对齐与 RLHF",
+      "category": "llm-core",
+      "summary": "基于人类偏好的强化学习，让输出更有用、更无害、更诚实。",
+      "why": "决定模型是否真正可用、可信、可控。",
+      "description": [
+        "SFT 教会模型“怎么回答”，对齐阶段解决的是“什么样的回答更好”。问题在于“更好”难以用损失函数直接定义——它涉及有用性、无害性与诚实性之间的权衡。RLHF 的思路是：既然无法直接写出目标，就让人类对回答两两比较，训练一个奖励模型来拟合这种偏好，再用强化学习优化策略。",
+        "经典流程包含三步：SFT 得到初始策略、用人类偏好数据训练奖励模型、用 PPO 在奖励模型指引下优化策略，同时施加 KL 惩罚防止模型偏离原分布过远（否则会出现奖励攻击，模型学会刷分而非变好）。",
+        "近两年的重要进展是简化路线。DPO 证明可以绕过显式奖励模型与强化学习，直接用偏好数据做分类式优化，训练稳定性与实现复杂度大幅改善；此外还有 Constitutional AI 用模型自身依据原则生成反馈（RLAIF），降低人工标注依赖。"
+      ],
+      "purposes": [
+        "提升模型回答的有用性与安全性",
+        "降低有害、偏见与幻觉输出的比例",
+        "用 DPO 等简化方法低成本完成偏好对齐",
+        "理解奖励攻击与 KL 约束的工程意义",
+        "设计偏好数据标注规范与质量控制流程"
+      ],
+      "resources": [
+        {
+          "title": "Training language models to follow instructions with human feedback",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2203.02155",
+          "note": "InstructGPT，RLHF 三阶段流程的权威描述。"
+        },
+        {
+          "title": "Direct Preference Optimization",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2305.18290",
+          "note": "DPO 论文，当前对齐实践的主流选择。"
+        },
+        {
+          "title": "Constitutional AI: Harmlessness from AI Feedback",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2212.08073",
+          "note": "用原则驱动的 AI 反馈替代部分人工标注。"
+        },
+        {
+          "title": "Hugging Face TRL 文档",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/trl/index",
+          "note": "PPO、DPO 等对齐算法的开源实现。"
+        }
+      ],
+      "zhihuKeywords": [
+        "RLHF 原理 详解",
+        "DPO 和 RLHF 区别"
+      ],
+      "prerequisites": [
+        "sft"
+      ]
+    },
+    {
+      "id": "rag",
+      "title": "RAG 检索增强生成",
+      "category": "llm-core",
+      "summary": "先检索外部知识再生成回答，解决知识过时与幻觉问题。",
+      "why": "让模型能回答训练数据之外的问题。",
+      "description": [
+        "大模型的知识冻结在训练截止日期，且无法访问私有数据。RAG 的方案是在生成前先从外部知识库检索相关片段，拼进上下文作为依据。这既规避了重新训练的高成本，又让回答可以附带来源、便于核查。",
+        "一条完整链路包含：文档解析与切块（chunking）、向量化（embedding）、向量库索引与存储、查询改写、检索（向量检索 + BM25 关键词检索的混合策略）、重排序（rerank）、上下文组装与生成。每一环都可能成为效果瓶颈，其中切块策略与重排序往往是投入产出比最高的优化点。",
+        "需要清楚 RAG 与微调的分工：RAG 适合注入频繁变化的事实性知识，微调适合改变输出风格、格式与固有行为模式。二者不是替代关系，生产系统中经常同时使用。常见失败模式包括切块破坏语义完整性、检索召回不足、以及上下文过长导致的“中间信息丢失”。"
+      ],
+      "purposes": [
+        "构建基于私有文档的智能问答系统",
+        "让回答携带可核查的引用来源",
+        "在不重新训练的前提下更新模型可用知识",
+        "降低事实性幻觉的发生概率",
+        "设计混合检索与重排序以提升召回质量"
+      ],
+      "resources": [
+        {
+          "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2005.11401",
+          "note": "RAG 概念的原始论文。"
+        },
+        {
+          "title": "Lost in the Middle: How Language Models Use Long Contexts",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2307.03172",
+          "note": "揭示长上下文中间信息被忽略的现象，影响上下文排布设计。"
+        },
+        {
+          "title": "LlamaIndex 文档",
+          "type": "doc",
+          "url": "https://docs.llamaindex.ai/en/stable/",
+          "note": "RAG 工程化的主流框架，模块划分清晰。"
+        },
+        {
+          "title": "Sentence Transformers 文档",
+          "type": "doc",
+          "url": "https://www.sbert.net/",
+          "note": "嵌入模型与语义检索的常用工具库。"
+        }
+      ],
+      "zhihuKeywords": [
+        "RAG 检索增强生成 原理",
+        "RAG 与微调 区别"
+      ],
+      "prerequisites": [
+        "prompt-engineering",
+        "tokenization"
+      ]
+    },
+    {
+      "id": "agent",
+      "title": "Agent 与工具调用",
+      "category": "llm-core",
+      "summary": "让模型规划任务、调用工具、观察结果并迭代直至完成目标。",
+      "why": "把语言能力转化为实际执行能力。",
+      "description": [
+        "普通对话中模型只能输出文本；Agent 范式给它装上了“手脚”：模型可以决定调用搜索、执行代码、读写文件、请求 API，拿到结果后再决定下一步。这把一次性问答变成了可以自我纠错的多轮循环。",
+        "核心机制包括：函数调用 / 工具调用（结构化地描述可用工具并解析模型的调用意图）、ReAct 式的推理-行动交替循环、任务规划与子任务分解、记忆机制（短期上下文与长期向量记忆）、多智能体协作、以及错误恢复与重试策略。MCP 等协议正在把工具接入标准化。",
+        "工程落地的主要挑战不是让它跑起来，而是让它可靠：长链条中单步错误会被放大、循环可能不收敛、token 消耗与延迟随步数线性增长、以及工具调用的权限与安全边界。生产系统通常需要步数上限、人工确认节点与完整的执行追踪。"
+      ],
+      "purposes": [
+        "构建能自主完成多步任务的应用",
+        "通过工具调用让模型访问实时数据与外部系统",
+        "实现代码执行、文件操作等自动化流程",
+        "设计任务规划、记忆与错误恢复机制",
+        "为 Agent 设定权限边界与可观测性方案"
+      ],
+      "resources": [
+        {
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2210.03629",
+          "note": "Agent 推理-行动循环的奠基论文。"
+        },
+        {
+          "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2302.04761",
+          "note": "工具调用能力的早期系统性研究。"
+        },
+        {
+          "title": "Model Context Protocol 文档",
+          "type": "doc",
+          "url": "https://modelcontextprotocol.io/",
+          "note": "工具与数据源接入的开放协议规范。"
+        },
+        {
+          "title": "Building effective agents（Anthropic）",
+          "type": "article",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents",
+          "note": "工程实践总结，强调简单可靠优于复杂编排。"
+        }
+      ],
+      "zhihuKeywords": [
+        "AI Agent 原理 实现",
+        "Function Calling 工具调用"
+      ],
+      "prerequisites": [
+        "prompt-engineering",
+        "sft"
+      ]
+    },
+    {
+      "id": "data-pipeline",
+      "title": "数据工程与清洗",
+      "category": "engineering",
+      "summary": "采集、解析、去重、过滤与配比，决定训练数据的质量上限。",
+      "why": "数据质量常比模型结构更影响效果。",
+      "description": [
+        "大模型训练中最脏最累但回报最高的工作就是数据工程。业界共识是：在架构趋同的今天，模型之间的差距主要来自数据。垃圾进、垃圾出这条老规律，在万亿 token 规模下被放大到了极致。",
+        "完整流程包括：多源采集（网页、书籍、代码、对话）、格式解析与正文抽取、语言识别与质量打分、规则过滤（长度、符号比例、重复率）、模型打分过滤、精确去重与近似去重（MinHash / SimHash）、有害内容与隐私信息清除、评测集污染检查、以及领域配比设计。",
+        "其中近似去重与污染检查最容易被忽视却后果严重。重复数据会让模型过度记忆、浪费算力；而训练集若混入评测集内容，所有指标都将失去意义——这是很多“刷榜”模型实际表现落差的根源。"
+      ],
+      "purposes": [
+        "构建可复现的训练数据处理流水线",
+        "通过去重与质量过滤提升数据有效性",
+        "检查并避免评测集污染",
+        "设计多领域数据配比与采样权重",
+        "为 RAG 知识库准备结构化、可检索的语料"
+      ],
+      "resources": [
+        {
+          "title": "The Pile: An 800GB Dataset of Diverse Text",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2101.00027",
+          "note": "开源大规模语料的构建思路与配比设计。"
+        },
+        {
+          "title": "The RefinedWeb Dataset for Falcon LLM",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2306.01116",
+          "note": "论证精细过滤的网页数据可媲美精选语料。"
+        },
+        {
+          "title": "Deduplicating Training Data Makes Language Models Better",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2107.06499",
+          "note": "量化去重对模型效果与训练效率的影响。"
+        },
+        {
+          "title": "Hugging Face Datasets 文档",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/datasets/index",
+          "note": "大规模数据集的加载、流式处理与变换工具。"
+        }
+      ],
+      "zhihuKeywords": [
+        "大模型 训练数据 清洗 流程",
+        "数据去重 MinHash 原理"
+      ],
+      "prerequisites": [
+        "python"
+      ]
+    },
+    {
+      "id": "inference-opt",
+      "title": "推理优化",
+      "category": "inference",
+      "summary": "量化、KV Cache 管理、批处理与算子优化，降低延迟与成本。",
+      "why": "决定模型能否以可接受的成本上线。",
+      "description": [
+        "训练是一次性投入，推理是持续性成本。一个模型上线后，99% 的算力消耗发生在推理阶段。推理优化的目标很具体：在可接受的质量损失下，把延迟和单位 token 成本压到最低。",
+        "主要技术路线分几类。显存与带宽侧：权重量化（INT8、INT4、GPTQ、AWQ）、KV Cache 量化与 PagedAttention 分页管理。计算侧：FlashAttention 通过算子融合减少显存读写、算子融合与图优化、投机解码（speculative decoding）用小模型草拟、大模型验证。吞吐侧：连续批处理（continuous batching）、张量并行切分大模型。",
+        "需要清楚区分两类场景的优化目标：在线交互关注首 token 延迟（TTFT）与逐 token 延迟（TPOT），离线批处理关注总吞吐。两者的最优配置往往相反——批大小、并行策略都要分别调优。vLLM、TensorRT-LLM、SGLang 是当前主流的工程落地方案。"
+      ],
+      "purposes": [
+        "降低推理延迟与单位 token 成本",
+        "通过量化让大模型在有限显存上运行",
+        "用连续批处理提升服务吞吐量",
+        "针对在线与离线场景分别调优配置",
+        "评估量化带来的精度损失是否可接受"
+      ],
+      "resources": [
+        {
+          "title": "FlashAttention: Fast and Memory-Efficient Exact Attention",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2205.14135",
+          "note": "IO 感知的注意力实现，已成为事实标准。"
+        },
+        {
+          "title": "Efficient Memory Management for LLM Serving with PagedAttention",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2309.06180",
+          "note": "vLLM 论文，KV Cache 分页管理的核心思想。"
+        },
+        {
+          "title": "vLLM 文档",
+          "type": "doc",
+          "url": "https://docs.vllm.ai/en/latest/",
+          "note": "高吞吐推理引擎，部署实践的主流选择。"
+        },
+        {
+          "title": "GPTQ: Accurate Post-Training Quantization",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2210.17323",
+          "note": "训练后量化的代表方法。"
+        }
+      ],
+      "zhihuKeywords": [
+        "大模型 推理优化 方法",
+        "vLLM PagedAttention 原理"
+      ],
+      "prerequisites": [
+        "transformer",
+        "pytorch"
+      ]
+    },
+    {
+      "id": "evaluation",
+      "title": "评测与安全",
+      "category": "practice",
+      "summary": "构建可信评测体系，并识别越狱、注入与幻觉等风险。",
+      "why": "没有可靠评测，所有优化都是盲目的。",
+      "description": [
+        "大模型评测的根本困难在于开放式生成没有唯一正确答案。于是形成了多层体系：客观选择题基准（MMLU、C-Eval）、代码执行验证（HumanEval）、人类偏好对战（Chatbot Arena）、以及用强模型充当裁判的自动评测（LLM-as-a-judge）。每种方法都有偏差，必须组合使用。",
+        "更重要的是针对自身业务建立私有评测集。公开基准容易被污染和过拟合，而业务评测集只要规模适中、标注一致、定期更新，就能真实反映迭代效果。建议把它当作回归测试套件纳入 CI 流程。",
+        "安全维度需要系统性对待：提示注入（外部内容劫持指令）、越狱（绕过安全策略）、有害内容生成、训练数据泄露、以及幻觉。防御手段包括输入输出过滤、权限最小化、工具调用沙箱、人工确认节点与红队测试。需要明确的是：把外部内容当作数据而非指令，是防御提示注入的基本原则。"
+      ],
+      "purposes": [
+        "建立覆盖业务场景的私有评测集",
+        "用多维度指标判断模型迭代是否真的进步",
+        "识别并防御提示注入与越狱攻击",
+        "量化并降低幻觉发生率",
+        "把评测纳入持续集成，防止能力回退"
+      ],
+      "resources": [
+        {
+          "title": "Measuring Massive Multitask Language Understanding",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2009.03300",
+          "note": "MMLU 基准论文，最广泛引用的知识评测。"
+        },
+        {
+          "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2306.05685",
+          "note": "系统分析模型裁判的可靠性与偏差。"
+        },
+        {
+          "title": "OWASP Top 10 for LLM Applications",
+          "type": "doc",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "note": "大模型应用安全风险清单，工程落地必读。"
+        },
+        {
+          "title": "Survey of Hallucination in Natural Language Generation",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2202.03629",
+          "note": "幻觉成因与缓解方法的系统综述。"
+        }
+      ],
+      "zhihuKeywords": [
+        "大模型 评测 benchmark 可信度",
+        "提示注入 攻击 防御"
+      ],
+      "prerequisites": [
+        "sft",
+        "prompt-engineering"
+      ]
+    },
+    {
+      "id": "deployment",
+      "title": "服务化部署",
+      "category": "inference",
+      "summary": "把模型封装为稳定可观测的线上服务，覆盖扩缩容与成本控制。",
+      "why": "模型只有上线并稳定运行才产生价值。",
+      "description": [
+        "从“能跑通的脚本”到“能承载真实流量的服务”，中间是一整套系统工程。需要解决接口设计、并发与排队、流式返回、超时与重试、灰度发布、监控告警、成本归因等问题，这些都不是模型本身的问题。",
+        "关键技术点：OpenAI 兼容的 API 接口规范（便于客户端复用生态）、流式输出（SSE 或 WebSocket）以降低用户感知延迟、GPU 资源调度与容器化部署、基于队列深度的自动扩缩容、多模型路由与降级策略、以及请求级别的可观测性（延迟分解、token 统计、错误率）。",
+        "成本控制是长期运营的核心命题。常用手段包括：按任务难度路由到不同规格模型、提示缓存复用相同前缀、结果缓存处理重复查询、以及离线任务错峰执行。建议从第一天就建立 token 级别的成本监控，否则很容易在规模化后失控。"
+      ],
+      "purposes": [
+        "把模型封装为高可用的线上 API 服务",
+        "实现流式输出以改善用户体验",
+        "设计自动扩缩容与多模型降级策略",
+        "建立延迟、吞吐与成本的监控体系",
+        "通过路由与缓存策略优化运营成本"
+      ],
+      "resources": [
+        {
+          "title": "vLLM · OpenAI 兼容服务部署",
+          "type": "doc",
+          "url": "https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html",
+          "note": "一条命令起一个兼容 OpenAI 协议的推理服务。"
+        },
+        {
+          "title": "NVIDIA Triton Inference Server 文档",
+          "type": "doc",
+          "url": "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/index.html",
+          "note": "工业级推理服务框架，支持多模型与动态批处理。"
+        },
+        {
+          "title": "Ray Serve 文档",
+          "type": "doc",
+          "url": "https://docs.ray.io/en/latest/serve/index.html",
+          "note": "分布式模型服务编排，适合多模型组合场景。"
+        },
+        {
+          "title": "Hugging Face Text Generation Inference",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/text-generation-inference/index",
+          "note": "生产级文本生成服务，内置流式与批处理优化。"
+        }
+      ],
+      "zhihuKeywords": [
+        "大模型 部署 方案 对比",
+        "大模型 推理 成本 优化"
+      ],
+      "prerequisites": [
+        "inference-opt",
+        "data-pipeline"
+      ]
+    },
+    {
+      "id": "vit-clip",
+      "title": "视觉编码器 ViT / CLIP",
+      "category": "multimodal",
+      "summary": "把图像切成 patch 编码成 token，并用图文对比学习对齐语义。",
+      "why": "多模态大模型理解图片的第一层，决定图文能否对齐。",
+      "description": [
+        "ViT 把图片切成固定大小的 patch，展平成序列交给 Transformer，让图像和文本共享同一种注意力结构。CLIP 在此基础上用大规模图文对做对比学习：匹配的图文在向量空间被拉近，不匹配的被推远。",
+        "掌握 ViT/CLIP 之后，才能理解多模态模型如何把「图像 token」接到语言模型前面，也才能解释图文检索、零样本分类、视觉问答为什么都依赖同一个对齐空间。"
+      ],
+      "purposes": [
+        "理解多模态模型的视觉输入管线",
+        "做图文检索与零样本分类",
+        "评估视觉编码器对下游任务的影响"
+      ],
+      "resources": [
+        {
+          "title": "An Image is Worth 16x16 Words (ViT)",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2010.11929"
+        },
+        {
+          "title": "CLIP: Learning Transferable Visual Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2103.00020"
+        },
+        {
+          "title": "Hugging Face ViT 文档",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/transformers/model_doc/vit"
+        }
+      ],
+      "zhihuKeywords": [
+        "ViT 原理",
+        "CLIP 图文对齐"
+      ],
+      "prerequisites": [
+        "neural-net",
+        "attention"
+      ]
+    },
+    {
+      "id": "multimodal-llm",
+      "title": "多模态大模型",
+      "category": "multimodal",
+      "summary": "把图像、音频等编码成 token，与文本一起送入大模型做联合推理。",
+      "why": "图片理解、文档问答、语音助手都建立在多模态对齐之上。",
+      "description": [
+        "多模态大模型通常在语言模型前接一个模态编码器：图像经 ViT 变成视觉 token，再通过投影层映射到语言模型的词向量空间，与文本 token 拼成一条更长序列。训练分两步，先对齐模态，再指令微调。",
+        "工程上要关注分辨率与 token 数量、图像 token 的压缩、跨模态位置编码，以及评测时的幻觉与细粒度识别。它也是文档解析、GUI Agent、视频理解等应用的底座。"
+      ],
+      "purposes": [
+        "做图文问答、文档与表格解析",
+        "构建能看界面的 GUI Agent",
+        "评估多模态模型的幻觉与细粒度能力"
+      ],
+      "resources": [
+        {
+          "title": "Visual Instruction Tuning (LLaVA)",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2304.08485"
+        },
+        {
+          "title": "Qwen-VL 技术报告",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2308.12966"
+        },
+        {
+          "title": "Hugging Face 多模态模型总览",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/transformers/main/en/tasks/image_text_to_text"
+        }
+      ],
+      "zhihuKeywords": [
+        "多模态大模型",
+        "图文问答 原理"
+      ],
+      "prerequisites": [
+        "vit-clip",
+        "transformer",
+        "sft"
+      ]
+    },
+    {
+      "id": "lora-finetune",
+      "title": "LoRA 与参数高效微调",
+      "category": "llm-core",
+      "summary": "冻结主干，只训练低秩旁路矩阵，用很小成本把模型适配到新任务。",
+      "why": "企业落地微调的主流方案，显存和存储成本远低于全参微调。",
+      "description": [
+        "LoRA 在注意力和前馈层的权重旁挂一对低秩矩阵 A、B，前向时把 BA 加回原权重，反向只更新 A、B。可训练参数常常只有全参的千分之一，单张消费级显卡就能微调 7B 级模型。",
+        "QLoRA 进一步把主干量化到 4bit，再在量化权重上训练 LoRA，显存再降一档。工程上还要处理秩与 alpha 的缩放、目标模块选择、合并导出，以及多适配器切换。"
+      ],
+      "purposes": [
+        "用低成本把通用模型适配到垂直领域",
+        "为不同客户维护可热插拔的适配器",
+        "在单卡环境下完成指令微调实验"
+      ],
+      "resources": [
+        {
+          "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2106.09685"
+        },
+        {
+          "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2305.14314"
+        },
+        {
+          "title": "Hugging Face PEFT 文档",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/peft"
+        }
+      ],
+      "zhihuKeywords": [
+        "LoRA 微调",
+        "QLoRA 显存"
+      ],
+      "prerequisites": [
+        "sft",
+        "transformer"
+      ]
+    },
+    {
+      "id": "vllm-serving",
+      "title": "vLLM 与推理加速",
+      "category": "inference",
+      "summary": "用 PagedAttention、连续批处理与 KV Cache 复用，把大模型吞吐压到工程极限。",
+      "why": "线上成本与延迟的关键，决定一次推理能服务多少并发。",
+      "description": [
+        "自回归推理的瓶颈在 KV Cache：每个请求都要缓存历史 token 的 Key/Value，显存碎片会让并发上不去。vLLM 用 PagedAttention 把 KV Cache 切成固定大小的块，像操作系统分页一样按需分配，显存浪费显著下降。",
+        "连续批处理让新请求随时插入正在运行的批次，配合前缀缓存、张量并行与量化，才能把单卡吞吐推到可用水平。生产上还要关注首 token 延迟、长上下文、限流与灰度。"
+      ],
+      "purposes": [
+        "部署高并发的在线大模型服务",
+        "降低长上下文场景的显存占用",
+        "对比不同推理框架的吞吐与延迟"
+      ],
+      "resources": [
+        {
+          "title": "Efficient Memory Management for LLM Serving (PagedAttention)",
+          "type": "paper",
+          "url": "https://arxiv.org/abs/2309.06180"
+        },
+        {
+          "title": "vLLM 官方文档",
+          "type": "doc",
+          "url": "https://docs.vllm.ai/"
+        },
+        {
+          "title": "Hugging Face Text Generation Inference",
+          "type": "doc",
+          "url": "https://huggingface.co/docs/text-generation-inference"
+        }
+      ],
+      "zhihuKeywords": [
+        "vLLM 部署",
+        "大模型推理加速"
+      ],
+      "prerequisites": [
+        "inference-opt",
+        "transformer"
+      ]
+    }
+  ]
+}

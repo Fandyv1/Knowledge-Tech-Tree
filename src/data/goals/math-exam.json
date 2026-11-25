@@ -1,0 +1,895 @@
+{
+  "id": "math-exam",
+  "title": "考研数学",
+  "subtitle": "高数、线代、概率三线并进，最后落到真题与冲刺",
+  "aliases": [
+    "考研数学",
+    "考研",
+    "数学一",
+    "数学二",
+    "数学三",
+    "高数",
+    "高等数学",
+    "线性代数",
+    "概率论",
+    "数理统计",
+    "考研高数",
+    "考研线代",
+    "考研概率",
+    "研究生考试数学",
+    "数一",
+    "数二",
+    "数三",
+    "考研数学一",
+    "考研数学二",
+    "考研数学三"
+  ],
+  "searchHints": [
+    "考研",
+    "数学",
+    "高数"
+  ],
+  "categories": [
+    {
+      "id": "calc",
+      "name": "高等数学",
+      "color": "#C9A96A",
+      "colorSoft": "rgba(201, 169, 106, 0.14)"
+    },
+    {
+      "id": "linear",
+      "name": "线性代数",
+      "color": "#82B0C0",
+      "colorSoft": "rgba(130, 176, 192, 0.14)"
+    },
+    {
+      "id": "prob",
+      "name": "概率论与数理统计",
+      "color": "#8FBFA0",
+      "colorSoft": "rgba(143, 191, 160, 0.14)"
+    },
+    {
+      "id": "methods",
+      "name": "解题方法",
+      "color": "#A98BD0",
+      "colorSoft": "rgba(169, 139, 208, 0.14)"
+    },
+    {
+      "id": "exam",
+      "name": "真题与冲刺",
+      "color": "#CE8FA6",
+      "colorSoft": "rgba(206, 143, 166, 0.14)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "functions-limits",
+      "title": "函数与极限",
+      "category": "calc",
+      "summary": "函数性质、数列极限、连续与间断点，整个高数的地基。",
+      "why": "极限定义导数、积分与级数，概念不清后面只能套公式。",
+      "description": [
+        "极限研究「无限接近」：数列极限、函数极限、左右极限与无穷小。要能用定义证明简单极限，也要熟练等价无穷小、夹逼与单调有界准则。",
+        "连续与间断点分类是极限的直接应用，也是后面判断可导、可积的前提。很多证明题的第一步都是把式子整理成极限形式。"
+      ],
+      "purposes": [
+        "建立极限的严格定义与直觉",
+        "判断函数连续性与间断类型",
+        "为导数、积分、级数打基础"
+      ],
+      "resources": [
+        {
+          "title": "3Blue1Brown: 微积分本质",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/calculus"
+        },
+        {
+          "title": "MIT 18.01 单变量微积分",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+        }
+      ],
+      "zhihuKeywords": [
+        "数列极限 定义",
+        "等价无穷小 替换"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "derivatives",
+      "title": "导数与微分",
+      "category": "calc",
+      "summary": "导数定义、求导法则、高阶导数与微分。",
+      "why": "导数刻画变化率，是极值、中值定理与微积分应用的核心。",
+      "description": [
+        "导数本质是差商的极限。要掌握基本求导公式、四则运算、复合函数链式法则、隐函数与参数方程求导。",
+        "微分是函数增量的线性主部，也是近似计算与误差估计的工具。做题时要分清「可导」「连续」「可微」之间的推出关系。"
+      ],
+      "purposes": [
+        "熟练计算各类函数的导数",
+        "理解可导与连续的关系",
+        "为极值、中值定理与积分打基础"
+      ],
+      "resources": [
+        {
+          "title": "Khan Academy: 导数",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/calculus-1"
+        },
+        {
+          "title": "MIT 18.01 导数与微分",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+        }
+      ],
+      "zhihuKeywords": [
+        "隐函数 求导"
+      ],
+      "prerequisites": [
+        "functions-limits"
+      ]
+    },
+    {
+      "id": "mean-value",
+      "title": "中值定理",
+      "category": "calc",
+      "summary": "罗尔、拉格朗日、柯西中值定理与不等式证明。",
+      "why": "证明题的高频考点，也是把函数值与导数联系起来的桥梁。",
+      "description": [
+        "三大中值定理层层递进：罗尔定理是基础，拉格朗日把差商等于某点导数，柯西处理两个函数的比。证明题常要构造辅助函数。",
+        "常见题型包括证明存在 ξ 满足某等式、证明不等式、讨论根的个数。看到「存在一点」就要条件反射地想到中值定理。"
+      ],
+      "purposes": [
+        "掌握中值定理的条件与结论",
+        "学会构造辅助函数",
+        "应对证明题与不等式题"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.01: 中值定理",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+        },
+        {
+          "title": "Khan Academy: 中值定理",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/ap-calculus-ab/ab-diff-analytical-applications-new"
+        }
+      ],
+      "zhihuKeywords": [
+        "拉格朗日中值定理 构造"
+      ],
+      "prerequisites": [
+        "derivatives"
+      ]
+    },
+    {
+      "id": "indefinite-integral",
+      "title": "不定积分",
+      "category": "calc",
+      "summary": "原函数、换元积分、分部积分与常见积分表。",
+      "why": "积分是导数的逆运算，也是定积分、微分方程的前置。",
+      "description": [
+        "不定积分求全体原函数。核心方法是换元与分部：第一类换元凑微分，第二类换元处理根式，分部积分处理乘积。",
+        "要背熟基本积分表，并理解「凑」的方向来自求导法则的逆用。积分结果别忘加常数 C，这是最容易丢的分。"
+      ],
+      "purposes": [
+        "熟练计算常见不定积分",
+        "掌握换元与分部积分",
+        "为定积分与微分方程做准备"
+      ],
+      "resources": [
+        {
+          "title": "3Blue1Brown: 积分",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/calculus"
+        },
+        {
+          "title": "Khan Academy: 积分",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/integral-calculus"
+        }
+      ],
+      "zhihuKeywords": [
+        "分部积分 口诀"
+      ],
+      "prerequisites": [
+        "derivatives"
+      ]
+    },
+    {
+      "id": "definite-integral",
+      "title": "定积分与应用",
+      "category": "calc",
+      "summary": "定积分性质、变上限积分、面积与旋转体体积。",
+      "why": "定积分把「累积」变成可计算量，应用题几乎每年必考。",
+      "description": [
+        "定积分是黎曼和的极限，性质包括线性、区间可加、保号与估值。变上限积分函数把积分与求导连起来，是证明题的常用工具。",
+        "应用集中在几何与物理：面积、弧长、旋转体体积、功与平均値。做题要先把图形画出来，再决定对 x 还是对 y 积分。"
+      ],
+      "purposes": [
+        "掌握定积分的性质与计算",
+        "处理变上限积分求导",
+        "解决面积、体积等应用题"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.01: 定积分与应用",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+        },
+        {
+          "title": "Khan Academy: 定积分",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/integral-calculus"
+        }
+      ],
+      "zhihuKeywords": [
+        "变上限积分 求导"
+      ],
+      "prerequisites": [
+        "indefinite-integral",
+        "mean-value"
+      ]
+    },
+    {
+      "id": "multivariable",
+      "title": "多元函数微分与重积分",
+      "category": "calc",
+      "summary": "偏导、全微分、多元极值与二重积分。",
+      "why": "数一必考，也是理解梯度、拉格朗日乘子的基础。",
+      "description": [
+        "多元函数把导数推广为偏导与方向导数，全微分描述可微性。要掌握复合函数求导、隐函数定理与无条件/条件极值。",
+        "二重积分要会画积分区域、交换积分次序、用极坐标简化。很多题目的难点不在积分本身，而在区域划分。"
+      ],
+      "purposes": [
+        "计算偏导与全微分",
+        "判断多元函数极值",
+        "用直角/极坐标计算二重积分"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.02 多变量微积分",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+        },
+        {
+          "title": "Khan Academy: 多变量微积分",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/multivariable-calculus"
+        }
+      ],
+      "zhihuKeywords": [
+        "二重积分 交换次序"
+      ],
+      "prerequisites": [
+        "definite-integral",
+        "derivatives"
+      ]
+    },
+    {
+      "id": "differential-equations",
+      "title": "微分方程",
+      "category": "calc",
+      "summary": "一阶方程、可降阶方程与二阶常系数线性方程。",
+      "why": "应用题与物理建模的常见落点，也是高等数学的收口章节。",
+      "description": [
+        "一阶方程重点是可分离变量、齐次、一阶线性与伯努利。二阶常系数线性方程要会写特征方程，区分相异实根、重根与共轭复根。",
+        "解题步骤通常是：识别类型 → 化为标准形 → 套通解公式 → 代入初始条件。应用题要先设变量、列方程，再求解。"
+      ],
+      "purposes": [
+        "识别并求解常见微分方程",
+        "处理二阶常系数方程",
+        "完成应用题建模与求解"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.03 微分方程",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/"
+        },
+        {
+          "title": "Khan Academy: 微分方程",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/differential-equations"
+        }
+      ],
+      "zhihuKeywords": [
+        "二阶常系数 微分方程"
+      ],
+      "prerequisites": [
+        "indefinite-integral",
+        "derivatives"
+      ]
+    },
+    {
+      "id": "series",
+      "title": "无穷级数",
+      "category": "calc",
+      "summary": "常数项级数、幂级数与傅里叶级数（数一）。",
+      "why": "判敛与展开是数一高频考点，也是后面理解生成函数的基础。",
+      "description": [
+        "常数项级数先判断敛散，再谈求和。要掌握正项级数的比较、比值、根值判别，以及交错级数的莱布尼茨判别。",
+        "幂级数重点在收敛半径、收敛域与和函数；泰勒展开是极限与近似计算的利器。数一还要求傅里叶级数。"
+      ],
+      "purposes": [
+        "判断级数敛散性",
+        "求幂级数收敛域与和函数",
+        "用泰勒展开处理极限与近似"
+      ],
+      "resources": [
+        {
+          "title": "3Blue1Brown: 级数",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/lessons/series"
+        },
+        {
+          "title": "MIT 18.01: 级数",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+        }
+      ],
+      "zhihuKeywords": [
+        "幂级数 收敛半径"
+      ],
+      "prerequisites": [
+        "functions-limits",
+        "derivatives",
+        "mean-value"
+      ]
+    },
+    {
+      "id": "determinant",
+      "title": "行列式",
+      "category": "linear",
+      "summary": "行列式定义、性质、按行展开与常见计算技巧。",
+      "why": "线代的入口，也是判断矩阵可逆与方程组解的唯一性的工具。",
+      "description": [
+        "行列式是方阵到标量的映射，几何上是线性变换的体积缩放因子。性质包括交换两行变号、某行乘 k 行列式乘 k、行变换不改变行列式（倍加）。",
+        "计算时先用性质化三角，再按行/列展开。特殊结构（范德蒙德、分块）要记公式，考场上能省大量时间。"
+      ],
+      "purposes": [
+        "熟练计算三阶及 n 阶行列式",
+        "用行列式判断可逆性",
+        "为矩阵与方程组打基础"
+      ],
+      "resources": [
+        {
+          "title": "3Blue1Brown: 线性代数的本质",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/linear-algebra"
+        },
+        {
+          "title": "MIT 18.06 线性代数",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+        }
+      ],
+      "zhihuKeywords": [
+        "行列式 化三角"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "matrix",
+      "title": "矩阵",
+      "category": "linear",
+      "summary": "矩阵运算、逆矩阵、初等变换与分块矩阵。",
+      "why": "矩阵是线代的语言，后续秩、特征值、二次型都建立在它上面。",
+      "description": [
+        "矩阵乘法不满足交换律，但要满足结合律与分配律。要掌握转置、逆、伴随、初等矩阵，以及用初等行变换求逆和解方程。",
+        "分块矩阵能把大问题拆小，特殊矩阵（对角、三角、正交、对称）的性质要熟。矩阵幂与秩的关系也是常考点。"
+      ],
+      "purposes": [
+        "熟练进行矩阵运算与求逆",
+        "用初等变换化简矩阵",
+        "为秩、特征值、二次型做准备"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.06: 矩阵运算",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+        },
+        {
+          "title": "Khan Academy: 矩阵",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/linear-algebra/matrices"
+        }
+      ],
+      "zhihuKeywords": [
+        "矩阵 求逆 初等变换"
+      ],
+      "prerequisites": [
+        "determinant"
+      ]
+    },
+    {
+      "id": "rank",
+      "title": "秩与线性方程组",
+      "category": "linear",
+      "summary": "矩阵的秩、线性方程组解的存在性与通解结构。",
+      "why": "线代最核心的判定工具，考研几乎每年都考。",
+      "description": [
+        "秩是矩阵中线性无关行/列的最大个数，也是线性变换像空间的维数。要会用初等变换求秩，理解秩与行列式、可逆性的关系。",
+        "线性方程组用秩判定：r(A)=r(A|b) 时有解，等于未知数个数时唯一，否则无穷多。通解 = 特解 + 齐次通解。"
+      ],
+      "purposes": [
+        "快速求矩阵的秩",
+        "判断方程组解的情况",
+        "写出基础解系与通解"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.06: 秩与方程组",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+        },
+        {
+          "title": "Khan Academy: 线性方程组",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces"
+        }
+      ],
+      "zhihuKeywords": [
+        "秩 判断 解的个数"
+      ],
+      "prerequisites": [
+        "matrix"
+      ]
+    },
+    {
+      "id": "vector-space",
+      "title": "向量组与线性空间",
+      "category": "linear",
+      "summary": "线性相关、极大无关组、基与维数、坐标变换。",
+      "why": "秩的几何解释，也是理解特征向量与二次型的基础。",
+      "description": [
+        "向量组线性相关等价于存在非零系数使线性组合为零。极大无关组给出向量组的「骨架」，其向量个数就是秩。",
+        "线性空间、基、维数、过渡矩阵把具体向量抽象化。考研更关注计算：判断相关性、求极大无关组、求过渡矩阵。"
+      ],
+      "purposes": [
+        "判断向量组的线性相关性",
+        "求极大无关组与秩",
+        "理解基、维数与坐标变换"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.06: 向量空间",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+        },
+        {
+          "title": "3Blue1Brown: 向量与空间",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/topics/linear-algebra"
+        }
+      ],
+      "zhihuKeywords": [
+        "极大无关组 求法"
+      ],
+      "prerequisites": [
+        "rank"
+      ]
+    },
+    {
+      "id": "eigenvalues",
+      "title": "特征值与特征向量",
+      "category": "linear",
+      "summary": "特征方程、相似对角化、实对称矩阵的正交对角化。",
+      "why": "线代与二次型、微分方程的连接点，也是高频大题。",
+      "description": [
+        "特征值满足 |A-λE|=0，特征向量是对应齐次方程的非零解。要掌握特征值性质（迹、行列式、幂）与相似矩阵的关系。",
+        "可对角化的判定、实对称矩阵的正交对角化是重点。做题常需要先求特征值，再求特征向量，最后写 P 与 Λ。"
+      ],
+      "purposes": [
+        "计算特征值与特征向量",
+        "判断矩阵能否相似对角化",
+        "处理实对称矩阵的正交对角化"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.06: 特征值",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+        },
+        {
+          "title": "3Blue1Brown: 特征向量",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/lessons/eigenvectors"
+        }
+      ],
+      "zhihuKeywords": [
+        "相似对角化 条件"
+      ],
+      "prerequisites": [
+        "matrix",
+        "rank"
+      ]
+    },
+    {
+      "id": "quadratic",
+      "title": "二次型",
+      "category": "linear",
+      "summary": "二次型标准形、合同变换、惯性定理与正定性。",
+      "why": "线代的综合题，把矩阵、特征值、对角化串在一起。",
+      "description": [
+        "二次型用对称矩阵表示，化简为标准形有配方法与正交变换两条路。合同变换保持秩与惯性指数，特征值符号决定正定性。",
+        "要掌握顺序主子式判定、正定矩阵性质，以及用正交变换化标准形。综合题常与特征值、秩一起考。"
+      ],
+      "purposes": [
+        "用配方法/正交变换化标准形",
+        "判断二次型正定性",
+        "综合运用特征值与合同变换"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.06: 二次型与正定",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+        },
+        {
+          "title": "Khan Academy: 二次型",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/linear-algebra"
+        }
+      ],
+      "zhihuKeywords": [
+        "二次型 正定 判定"
+      ],
+      "prerequisites": [
+        "eigenvalues",
+        "vector-space"
+      ]
+    },
+    {
+      "id": "probability-axioms",
+      "title": "概率基础",
+      "category": "prob",
+      "summary": "样本空间、古典概型、条件概率、全概率与贝叶斯。",
+      "why": "概率论的语言基础，后面所有分布与统计都从这里出发。",
+      "description": [
+        "概率的公理化定义给出三条基本性质，由此推出加法、减法、条件概率公式。古典概型与几何概型是两类直观模型。",
+        "全概率公式按原因分解，贝叶斯公式由结果反推原因。做题关键是画清事件关系，别把条件概率与交集概率混淆。"
+      ],
+      "purposes": [
+        "建立概率的公理化理解",
+        "熟练使用条件概率与贝叶斯",
+        "处理古典概型与事件运算"
+      ],
+      "resources": [
+        {
+          "title": "Khan Academy: 概率",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/probability-library"
+        },
+        {
+          "title": "MIT 6.041 概率系统分析",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        }
+      ],
+      "zhihuKeywords": [
+        "全概率 贝叶斯 区别"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "random-variable",
+      "title": "随机变量与分布",
+      "category": "prob",
+      "summary": "分布函数、离散型与连续型随机变量、常见分布。",
+      "why": "把随机现象变成可计算的函数，是概率论的核心抽象。",
+      "description": [
+        "随机变量是样本空间到实数的映射，分布函数完整描述其统计规律。离散型看分布律，连续型看密度函数，两者都要会互推。",
+        "常见分布要记参数、期望方差与适用场景：0-1、二项、泊松、均匀、指数、正态。正态分布的标准化是后续计算的通用工具。"
+      ],
+      "purposes": [
+        "写出分布函数与密度/分布律",
+        "识别并计算常见分布",
+        "为正态标准化与多维分布做准备"
+      ],
+      "resources": [
+        {
+          "title": "MIT 6.041: 随机变量",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        },
+        {
+          "title": "Khan Academy: 随机变量",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library"
+        }
+      ],
+      "zhihuKeywords": [
+        "分布函数 密度函数 区别"
+      ],
+      "prerequisites": [
+        "probability-axioms"
+      ]
+    },
+    {
+      "id": "multidimensional",
+      "title": "多维随机变量",
+      "category": "prob",
+      "summary": "联合分布、边缘分布、独立性、协方差与相关系数。",
+      "why": "现实问题几乎都是多变量，独立性是很多公式成立的前提。",
+      "description": [
+        "二维随机变量用联合分布描述，边缘分布从联合分布积分/求和得到。独立性要求联合分布等于边缘乘积，不能只看相关系数为零。",
+        "协方差与相关系数描述线性相关程度，相关系数为零不代表独立（除非联合正态）。卷积公式用来求和的分布。"
+      ],
+      "purposes": [
+        "求联合分布与边缘分布",
+        "判断随机变量的独立性",
+        "计算协方差与相关系数"
+      ],
+      "resources": [
+        {
+          "title": "MIT 6.041: 多维随机变量",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        },
+        {
+          "title": "Khan Academy: 二维随机变量",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library"
+        }
+      ],
+      "zhihuKeywords": [
+        "边缘分布 求法"
+      ],
+      "prerequisites": [
+        "random-variable",
+        "probability-axioms"
+      ]
+    },
+    {
+      "id": "expectation",
+      "title": "数字特征",
+      "category": "prob",
+      "summary": "期望、方差、协方差、矩与常见分布的参数。",
+      "why": "用一个数概括随机变量，是统计推断与风险评估的起点。",
+      "description": [
+        "期望是加权平均，方差刻画波动。要掌握期望的线性性（不要求独立）、方差的可加性（要求不相关）以及常见分布的期望方差。",
+        "条件期望是全期望公式的核心，也是后面大数定律与估计的桥梁。做题时先判断能否用性质，再决定是否积分。"
+      ],
+      "purposes": [
+        "计算期望、方差与协方差",
+        "熟练使用期望的线性性",
+        "为极限定理与参数估计打基础"
+      ],
+      "resources": [
+        {
+          "title": "MIT 6.041: 数字特征",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        },
+        {
+          "title": "Khan Academy: 期望与方差",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library"
+        }
+      ],
+      "zhihuKeywords": [
+        "方差 可加性 条件"
+      ],
+      "prerequisites": [
+        "multidimensional"
+      ]
+    },
+    {
+      "id": "limit-theorems",
+      "title": "大数定律与中心极限定理",
+      "category": "prob",
+      "summary": "辛钦/伯努利大数定律、列维-林德伯格中心极限定理。",
+      "why": "解释为什么样本均值稳定、为什么正态分布无处不在。",
+      "description": [
+        "大数定律说样本均值依概率收敛到期望，是「用频率估计概率」的理论依据。要区分不同大数定律的条件。",
+        "中心极限定理说独立同分布和的标准化趋于正态，不管原始分布是什么。它是置信区间与假设检验的底层依据。"
+      ],
+      "purposes": [
+        "理解样本均值的稳定性",
+        "用中心极限定理做近似计算",
+        "为区间估计与检验提供依据"
+      ],
+      "resources": [
+        {
+          "title": "MIT 6.041: 极限定理",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        },
+        {
+          "title": "Khan Academy: 中心极限定理",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/sampling-distributions-library"
+        }
+      ],
+      "zhihuKeywords": [
+        "中心极限定理 应用"
+      ],
+      "prerequisites": [
+        "expectation",
+        "random-variable"
+      ]
+    },
+    {
+      "id": "estimation",
+      "title": "参数估计",
+      "category": "prob",
+      "summary": "矩估计、最大似然估计、无偏性与区间估计。",
+      "why": "数理统计的核心：用样本反推总体参数。",
+      "description": [
+        "矩估计用样本矩替换总体矩，最大似然估计找使样本出现概率最大的参数。要会写似然函数、取对数、求导。",
+        "评价估计量看无偏性、有效性、一致性。区间估计依赖枢轴量，正态总体均值/方差的置信区间要熟记。"
+      ],
+      "purposes": [
+        "求矩估计与最大似然估计",
+        "判断估计量的无偏性",
+        "构造置信区间"
+      ],
+      "resources": [
+        {
+          "title": "MIT 6.041: 参数估计",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        },
+        {
+          "title": "Khan Academy: 估计",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/confidence-intervals-one-sample"
+        }
+      ],
+      "zhihuKeywords": [
+        "最大似然估计 步骤"
+      ],
+      "prerequisites": [
+        "limit-theorems",
+        "multidimensional"
+      ]
+    },
+    {
+      "id": "hypothesis",
+      "title": "假设检验",
+      "category": "prob",
+      "summary": "原假设与备择假设、两类错误、U/t/卡方/F 检验。",
+      "why": "统计推断的另一半，考研概率大题常与估计交替出现。",
+      "description": [
+        "假设检验先设原假设，再构造统计量，根据显著性水平拒绝或接受。要理解第一类错误（弃真）与第二类错误（取伪）的权衡。",
+        "正态总体均值、方差、比例的检验要会选统计量。p 值是小概率事件的度量，不是原假设为真的概率。"
+      ],
+      "purposes": [
+        "正确设置原假设与备择假设",
+        "选择并计算检验统计量",
+        "解释显著性水平与 p 值"
+      ],
+      "resources": [
+        {
+          "title": "Khan Academy: 假设检验",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample"
+        },
+        {
+          "title": "MIT 6.041: 检验",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/"
+        }
+      ],
+      "zhihuKeywords": [
+        "第一类错误 第二类错误"
+      ],
+      "prerequisites": [
+        "estimation"
+      ]
+    },
+    {
+      "id": "limit-methods",
+      "title": "极限与求导技巧",
+      "category": "methods",
+      "summary": "等价无穷小、洛必达、泰勒展开、夹逼与单调有界。",
+      "why": "考场上比的是熟练度，技巧决定一道题用 2 分钟还是 10 分钟。",
+      "description": [
+        "求极限先判断类型，再选工具：0/0 与 ∞/∞ 优先洛必达或泰勒，含根式考虑有理化，数列考虑夹逼或单调有界。",
+        "等价无穷小替换只能在乘除中直接用，加减要谨慎。泰勒展开要注意阶数与余项，选对展开点能大幅简化。"
+      ],
+      "purposes": [
+        "快速识别极限类型并选方法",
+        "熟练使用泰勒与等价替换",
+        "提高选择填空的解题速度"
+      ],
+      "resources": [
+        {
+          "title": "3Blue1Brown: 泰勒级数",
+          "type": "video",
+          "url": "https://www.3blue1brown.com/lessons/taylor-series"
+        },
+        {
+          "title": "Khan Academy: 极限技巧",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/calculus-1"
+        }
+      ],
+      "zhihuKeywords": [
+        "等价无穷小 加减 为什么不能换"
+      ],
+      "prerequisites": [
+        "functions-limits",
+        "derivatives"
+      ]
+    },
+    {
+      "id": "integral-methods",
+      "title": "积分技巧",
+      "category": "methods",
+      "summary": "换元、分部、有理函数、对称性与定积分特殊技巧。",
+      "why": "积分计算是送分题，但方法选错会算到崩溃。",
+      "description": [
+        "不定积分看结构选换元或分部，有理函数先拆分式。定积分要善用奇偶性、周期性、区间再现公式和 Wallis 公式。",
+        "做题顺序：先看能否用对称性化简，再看能否换元，最后才硬算。平时要整理常考积分模板。"
+      ],
+      "purposes": [
+        "快速选择积分方法",
+        "利用对称性简化定积分",
+        "掌握有理函数与根式积分"
+      ],
+      "resources": [
+        {
+          "title": "MIT 18.01: 积分技巧",
+          "type": "course",
+          "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+        },
+        {
+          "title": "Khan Academy: 积分技巧",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/integral-calculus"
+        }
+      ],
+      "zhihuKeywords": [
+        "定积分 对称性 技巧"
+      ],
+      "prerequisites": [
+        "indefinite-integral",
+        "definite-integral",
+        "limit-methods"
+      ]
+    },
+    {
+      "id": "exam-papers",
+      "title": "真题与冲刺",
+      "category": "exam",
+      "summary": "真题套卷、时间分配、错题复盘与考前策略。",
+      "why": "知识会不等于考得好，真题训练决定最终分数。",
+      "description": [
+        "冲刺阶段按套卷限时训练，严格模拟考场。每套卷做完要复盘：错题归因（概念/计算/审题）、时间分配、取舍策略。",
+        "近 15 年真题至少刷两遍，第二遍按题型归类。考前两周回归基础公式与错题本，不再开新难题。"
+      ],
+      "purposes": [
+        "通过套卷暴露知识漏洞",
+        "训练考场时间分配",
+        "形成稳定的冲刺节奏"
+      ],
+      "resources": [
+        {
+          "title": "中国研究生招生信息网",
+          "type": "doc",
+          "url": "https://yz.chsi.com.cn/"
+        },
+        {
+          "title": "知乎：考研数学真题复盘",
+          "type": "article",
+          "url": "https://www.zhihu.com/search?type=content&q=%E8%80%83%E7%A0%94%E6%95%B0%E5%AD%A6%E7%9C%9F%E9%A2%98"
+        }
+      ],
+      "zhihuKeywords": [
+        "考研数学 真题 怎么刷",
+        "考研数学 时间分配"
+      ],
+      "prerequisites": [
+        "mean-value",
+        "quadratic",
+        "hypothesis",
+        "integral-methods",
+        "series"
+      ]
+    }
+  ]
+}

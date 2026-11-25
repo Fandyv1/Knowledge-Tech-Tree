@@ -1,0 +1,890 @@
+{
+  "id": "python-data",
+  "title": "Python 数据分析",
+  "subtitle": "从 Python 语法到 pandas、统计、可视化与业务分析",
+  "aliases": [
+    "python数据分析",
+    "数据分析",
+    "pandas",
+    "numpy",
+    "sql",
+    "数据清洗",
+    "数据可视化",
+    "数据分析师",
+    "python",
+    "数据分析入门",
+    "ab测试",
+    "业务分析",
+    "用户分析"
+  ],
+  "searchHints": [
+    "Python",
+    "数据分析",
+    "pandas"
+  ],
+  "categories": [
+    {
+      "id": "py-basics",
+      "name": "Python 基础",
+      "color": "#82B0C0",
+      "colorSoft": "rgba(130, 176, 192, 0.14)"
+    },
+    {
+      "id": "data-tools",
+      "name": "数据处理",
+      "color": "#C9A96A",
+      "colorSoft": "rgba(201, 169, 106, 0.14)"
+    },
+    {
+      "id": "stats",
+      "name": "统计与建模",
+      "color": "#8FBFA0",
+      "colorSoft": "rgba(143, 191, 160, 0.14)"
+    },
+    {
+      "id": "viz",
+      "name": "可视化",
+      "color": "#A98BD0",
+      "colorSoft": "rgba(169, 139, 208, 0.14)"
+    },
+    {
+      "id": "business",
+      "name": "业务分析",
+      "color": "#CE8FA6",
+      "colorSoft": "rgba(206, 143, 166, 0.14)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "python-syntax",
+      "title": "Python 基础语法",
+      "category": "py-basics",
+      "summary": "变量、条件、循环、列表与字典，写出第一段能跑的数据脚本。",
+      "why": "后面所有 pandas / NumPy 代码都建立在这些语法上。",
+      "description": [
+        "Python 的语法接近伪代码：缩进决定代码块，变量不需要声明类型，列表和字典几乎能表达所有结构化数据。数据分析里最常用的是切片、推导式、条件判断和异常处理。",
+        "这一阶段不追求算法能力，而是做到能读懂报错、能写小脚本、能把一个重复操作封装起来。基础不牢，后面的链式调用和索引对齐会变成黑箱。"
+      ],
+      "purposes": [
+        "独立写出可运行的数据处理脚本",
+        "看懂 pandas 报错并定位问题",
+        "为函数封装与文件读写打基础"
+      ],
+      "resources": [
+        {
+          "title": "Python 官方教程",
+          "type": "doc",
+          "url": "https://docs.python.org/3/tutorial/"
+        },
+        {
+          "title": "Kaggle: Python 入门",
+          "type": "course",
+          "url": "https://www.kaggle.com/learn/python"
+        }
+      ],
+      "zhihuKeywords": [
+        "Python 零基础 入门"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "python-functions",
+      "title": "函数与模块",
+      "category": "py-basics",
+      "summary": "把重复逻辑封装成函数，理解参数、返回值、作用域与导入。",
+      "why": "分析脚本一长就必须拆分，否则无法复用、测试和协作。",
+      "description": [
+        "函数把输入、处理和输出固定下来，是脚本走向工程的第一步。要掌握位置参数、关键字参数、默认值、返回值，以及局部变量与全局变量的区别。",
+        "模块与包让代码可以按职责拆分。数据分析项目通常按「取数 / 清洗 / 分析 / 出图」拆模块，而不是全部堆在一个 notebook 里。"
+      ],
+      "purposes": [
+        "把重复分析步骤封装成可复用函数",
+        "按职责拆分 notebook 与脚本",
+        "为后续写数据管道做准备"
+      ],
+      "resources": [
+        {
+          "title": "Python 函数定义",
+          "type": "doc",
+          "url": "https://docs.python.org/3/tutorial/controlflow.html#defining-functions"
+        },
+        {
+          "title": "Python 模块",
+          "type": "doc",
+          "url": "https://docs.python.org/3/tutorial/modules.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "Python 函数 参数"
+      ],
+      "prerequisites": [
+        "python-syntax"
+      ]
+    },
+    {
+      "id": "python-files",
+      "title": "文件与表格读写",
+      "category": "py-basics",
+      "summary": "读写 CSV / JSON / Excel，处理编码、路径与异常。",
+      "why": "真实数据几乎都以文件或表格形式交付，读不进来就无从分析。",
+      "description": [
+        "CSV、JSON、Excel 是数据分析最常见的三种输入。要会处理编码（UTF-8 / GBK）、分隔符、表头、空行和损坏行，也要知道 with open 为什么能自动关闭文件。",
+        "路径问题在 Windows 上尤其常见。建议统一用 pathlib 拼接路径，读文件时显式指定编码，并对缺失文件与权限错误做兜底。"
+      ],
+      "purposes": [
+        "把业务方给的表格读进内存",
+        "批量处理目录下的多份数据文件",
+        "避免编码与路径导致的低级失败"
+      ],
+      "resources": [
+        {
+          "title": "Python csv 模块",
+          "type": "doc",
+          "url": "https://docs.python.org/3/library/csv.html"
+        },
+        {
+          "title": "pandas 读取 Excel",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/io.html#excel-files"
+        }
+      ],
+      "zhihuKeywords": [
+        "Python 读取 Excel",
+        "CSV 编码 乱码"
+      ],
+      "prerequisites": [
+        "python-functions"
+      ]
+    },
+    {
+      "id": "numpy-array",
+      "title": "NumPy 数组",
+      "category": "data-tools",
+      "summary": "ndarray、广播、向量化运算，替代 Python 循环做数值计算。",
+      "why": "pandas 与所有统计计算的底层都是 NumPy 数组。",
+      "description": [
+        "NumPy 的核心是 ndarray：同类型、连续内存、支持多维索引。向量化运算把循环下沉到 C 层，速度通常比 Python for 循环快一到两个数量级。",
+        "广播规则决定不同形状的数组如何对齐计算，也是 pandas 对齐行为的来源。还要理解视图与副本，避免无意中修改原数据。"
+      ],
+      "purposes": [
+        "快速完成大规模数值计算",
+        "理解 pandas 底层的数据结构",
+        "为统计与建模准备矩阵运算能力"
+      ],
+      "resources": [
+        {
+          "title": "NumPy Quickstart",
+          "type": "doc",
+          "url": "https://numpy.org/doc/stable/user/quickstart.html"
+        },
+        {
+          "title": "100 NumPy Exercises",
+          "type": "article",
+          "url": "https://github.com/rougier/numpy-100"
+        }
+      ],
+      "zhihuKeywords": [
+        "NumPy 广播机制"
+      ],
+      "prerequisites": [
+        "python-syntax"
+      ]
+    },
+    {
+      "id": "pandas-series",
+      "title": "pandas Series",
+      "category": "data-tools",
+      "summary": "一维带标签数组，理解索引、对齐与缺失值。",
+      "why": "Series 是 DataFrame 的列，索引对齐是 pandas 最容易踩坑的地方。",
+      "description": [
+        "Series 由一组值和一组索引组成，运算默认按索引对齐，而不是按位置。两个索引不完全相同的 Series 相加会产生并集，并出现 NaN。",
+        "要掌握 loc / iloc 的区别、缺失值判断、重命名索引和简单聚合。很多「数据莫名其妙变多或变空」的问题，根源都在索引对齐。"
+      ],
+      "purposes": [
+        "按标签安全地取数和改数",
+        "理解 pandas 运算的对齐规则",
+        "为 DataFrame 的列操作打基础"
+      ],
+      "resources": [
+        {
+          "title": "pandas 10 分钟入门",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/10min.html"
+        },
+        {
+          "title": "Series 官方文档",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.Series.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "pandas 索引对齐"
+      ],
+      "prerequisites": [
+        "numpy-array"
+      ]
+    },
+    {
+      "id": "pandas-dataframe",
+      "title": "pandas DataFrame",
+      "category": "data-tools",
+      "summary": "二维表的核心操作：筛选、排序、分组、聚合。",
+      "why": "日常 80% 的数据处理都是在 DataFrame 上完成的。",
+      "description": [
+        "DataFrame 可以理解成共享同一索引的 Series 集合。要熟练使用布尔筛选、loc 赋值、sort_values、groupby + agg，以及 apply 的适用边界。",
+        "分组聚合是分析的核心：先按维度切分，再对指标做求和、均值、计数。理解 groupby 的 split-apply-combine 过程，才能写出可读且高效的分析代码。"
+      ],
+      "purposes": [
+        "完成日常的表格筛选与汇总",
+        "按业务维度做分组指标",
+        "为可视化和建模准备干净宽表"
+      ],
+      "resources": [
+        {
+          "title": "pandas 用户指南",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/index.html"
+        },
+        {
+          "title": "pandas groupby 指南",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/groupby.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "pandas groupby 用法"
+      ],
+      "prerequisites": [
+        "pandas-series"
+      ]
+    },
+    {
+      "id": "data-cleaning",
+      "title": "数据清洗",
+      "category": "data-tools",
+      "summary": "缺失值、重复值、类型转换、异常值与文本清洗。",
+      "why": "脏数据直接决定结论是否可信，清洗通常占分析一半时间。",
+      "description": [
+        "清洗的第一步是盘点：每列的类型、缺失比例、取值范围、重复情况。然后决定缺失值填补还是删除、异常值是错误还是真实长尾、文本要不要标准化。",
+        "清洗要留痕：把规则写成函数或脚本，记录每一步删了多少行。否则结论无法复现，也无法向业务解释为什么样本变少了。"
+      ],
+      "purposes": [
+        "把业务原始表整理成可分析数据",
+        "识别并处理缺失与异常",
+        "让清洗过程可复现、可解释"
+      ],
+      "resources": [
+        {
+          "title": "pandas 缺失值处理",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/missing_data.html"
+        },
+        {
+          "title": "Kaggle 数据清洗",
+          "type": "course",
+          "url": "https://www.kaggle.com/learn/data-cleaning"
+        }
+      ],
+      "zhihuKeywords": [
+        "数据清洗 流程",
+        "缺失值 处理"
+      ],
+      "prerequisites": [
+        "pandas-dataframe",
+        "python-files"
+      ]
+    },
+    {
+      "id": "merge-reshape",
+      "title": "表连接与重塑",
+      "category": "data-tools",
+      "summary": "merge / join / concat / pivot，把多张表拼成分析宽表。",
+      "why": "真实指标散落在多张表里，不会连接就做不出完整分析。",
+      "description": [
+        "merge 对应 SQL 的 join，要理解内连接、左连接、全连接以及键重复导致的笛卡尔膨胀。concat 解决纵向追加，pivot / melt 解决宽长表转换。",
+        "连接后行数暴涨是最常见的事故。养成检查连接键唯一性、连接前后行数与空值比例的习惯，能避免大部分「数据对不上」的问题。"
+      ],
+      "purposes": [
+        "把订单、用户、渠道表拼成宽表",
+        "在宽表与长表之间转换",
+        "排查连接导致的数据膨胀"
+      ],
+      "resources": [
+        {
+          "title": "pandas 合并指南",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/merging.html"
+        },
+        {
+          "title": "pandas 重塑与透视",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/reshaping.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "pandas merge 一对多"
+      ],
+      "prerequisites": [
+        "pandas-dataframe",
+        "data-cleaning"
+      ]
+    },
+    {
+      "id": "sql-basics",
+      "title": "SQL 查询基础",
+      "category": "data-tools",
+      "summary": "SELECT / WHERE / GROUP BY / ORDER BY，从数据库取数。",
+      "why": "分析师的大部分原始数据来自数仓，SQL 是取数的通用语言。",
+      "description": [
+        "SQL 的书写顺序和执行顺序不同：先 FROM / JOIN，再 WHERE、GROUP BY、HAVING，最后 SELECT、ORDER BY、LIMIT。理解执行顺序才能解释聚合与别名的作用域。",
+        "要从单表查询练到分组聚合：按维度统计订单数、金额、去重用户数，并学会用 WHERE 过滤明细、HAVING 过滤聚合结果。"
+      ],
+      "purposes": [
+        "独立从数仓取回分析所需明细",
+        "做分维度、分时间的聚合指标",
+        "为 SQL 调优与窗口函数打基础"
+      ],
+      "resources": [
+        {
+          "title": "SQLBolt 交互式教程",
+          "type": "course",
+          "url": "https://sqlbolt.com/"
+        },
+        {
+          "title": "Mode SQL Tutorial",
+          "type": "course",
+          "url": "https://mode.com/sql-tutorial/"
+        }
+      ],
+      "zhihuKeywords": [
+        "SQL 入门",
+        "group by having 区别"
+      ],
+      "prerequisites": []
+    },
+    {
+      "id": "sql-joins",
+      "title": "多表连接与子查询",
+      "category": "data-tools",
+      "summary": "INNER / LEFT / FULL JOIN 与子查询，处理多表关联。",
+      "why": "用户、订单、行为日志分散在多表，连接是取数的主战场。",
+      "description": [
+        "连接的关键是明确驱动表与连接键：左连接保留左表全部行，内连接只保留匹配行。连接键不唯一会让结果行数膨胀，必须先验证唯一性。",
+        "子查询、CTE 和窗口函数能把复杂逻辑拆成可读的步骤。生产中还要注意大表连接的分区裁剪与数据倾斜。"
+      ],
+      "purposes": [
+        "把多张业务表关联成分析底表",
+        "用 CTE 拆分复杂取数逻辑",
+        "排查连接膨胀与空值问题"
+      ],
+      "resources": [
+        {
+          "title": "Mode: SQL Joins",
+          "type": "doc",
+          "url": "https://mode.com/sql-tutorial/sql-joins/"
+        },
+        {
+          "title": "PostgreSQL 查询文档",
+          "type": "doc",
+          "url": "https://www.postgresql.org/docs/current/queries.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "SQL 左连接 内连接 区别"
+      ],
+      "prerequisites": [
+        "sql-basics"
+      ]
+    },
+    {
+      "id": "descriptive-stats",
+      "title": "描述性统计",
+      "category": "stats",
+      "summary": "均值、中位数、方差、分位数与分布形态。",
+      "why": "不懂描述统计，就会被平均值和极端值误导。",
+      "description": [
+        "描述统计回答「这批数据长什么样」：集中趋势、离散程度、偏态与异常值。均值受极端值影响，中位数更稳健；方差与标准差描述波动，分位数描述尾部。",
+        "做任何分析前都应先看分布：直方图、箱线图、分位数表。很多业务争论其实是「看均值还是看中位数」的争论。"
+      ],
+      "purposes": [
+        "快速判断数据分布与异常",
+        "选择正确的汇总指标",
+        "为假设检验与建模做准备"
+      ],
+      "resources": [
+        {
+          "title": "Think Stats（免费电子书）",
+          "type": "book",
+          "url": "https://greenteapress.com/wp/think-stats-2e/"
+        },
+        {
+          "title": "Khan Academy: 统计与概率",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability"
+        }
+      ],
+      "zhihuKeywords": [
+        "均值 中位数 区别",
+        "标准差 方差"
+      ],
+      "prerequisites": [
+        "numpy-array"
+      ]
+    },
+    {
+      "id": "probability-basics",
+      "title": "概率与分布",
+      "category": "stats",
+      "summary": "条件概率、随机变量、常见分布与期望。",
+      "why": "显著性、置信区间和 A/B 实验都建立在概率语言上。",
+      "description": [
+        "要理解随机变量、期望、方差，以及正态、二项、泊松等常见分布分别描述什么场景。条件概率与贝叶斯公式是理解用户行为与筛查工具的基础。",
+        "不必从测度论出发，但要能判断「这个指标近似服从什么分布」，这决定了后面能不能用 t 检验、卡方检验或 bootstrap。"
+      ],
+      "purposes": [
+        "理解指标波动与抽样误差",
+        "为假设检验选择正确方法",
+        "解释贝叶斯在风控与推荐中的应用"
+      ],
+      "resources": [
+        {
+          "title": "Khan Academy: 概率",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/probability-library"
+        },
+        {
+          "title": "Think Stats",
+          "type": "book",
+          "url": "https://greenteapress.com/wp/think-stats-2e/"
+        }
+      ],
+      "zhihuKeywords": [
+        "条件概率 贝叶斯"
+      ],
+      "prerequisites": [
+        "descriptive-stats"
+      ]
+    },
+    {
+      "id": "eda",
+      "title": "探索性数据分析 EDA",
+      "category": "stats",
+      "summary": "用统计与图表快速摸清数据分布、相关性与异常。",
+      "why": "先探索再建模，能避免在错误的数据假设上做复杂分析。",
+      "description": [
+        "EDA 是一套提问流程：数据有多少行、每列什么类型、缺失多少、分布是否长尾、维度之间是否相关、有没有时间趋势与分群差异。",
+        "探索结果要沉淀成结论和后续假设，而不是堆一屏图表。好的 EDA 会直接告诉你要剔除哪些样本、补哪些数据、验证哪些业务猜想。"
+      ],
+      "purposes": [
+        "在建模前发现数据问题",
+        "形成可验证的业务假设",
+        "为汇报提供有说服力的图表"
+      ],
+      "resources": [
+        {
+          "title": "pandas 可视化与探索",
+          "type": "doc",
+          "url": "https://pandas.pydata.org/docs/user_guide/visualization.html"
+        },
+        {
+          "title": "Kaggle: Data Visualization",
+          "type": "course",
+          "url": "https://www.kaggle.com/learn/data-visualization"
+        }
+      ],
+      "zhihuKeywords": [
+        "EDA 怎么做"
+      ],
+      "prerequisites": [
+        "data-cleaning",
+        "descriptive-stats"
+      ]
+    },
+    {
+      "id": "hypothesis-testing",
+      "title": "假设检验",
+      "category": "stats",
+      "summary": "p 值、置信区间、t 检验与卡方检验的判断框架。",
+      "why": "没有检验，就无法区分真实差异和随机波动。",
+      "description": [
+        "假设检验先提出原假设，再计算在假设成立时观察到当前数据的概率（p 值）。p 值小不代表效果大，要同时看效应量与置信区间。",
+        "不同数据类型对应不同检验：连续指标用 t 检验，比例用卡方或 z 检验，分布未知时用 bootstrap。多重比较还要做校正。"
+      ],
+      "purposes": [
+        "判断两组指标差异是否显著",
+        "正确解读 p 值与置信区间",
+        "为 A/B 实验提供统计基础"
+      ],
+      "resources": [
+        {
+          "title": "Khan Academy: 显著性检验",
+          "type": "course",
+          "url": "https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample"
+        },
+        {
+          "title": "StatQuest: Hypothesis Testing",
+          "type": "video",
+          "url": "https://statquest.org/"
+        }
+      ],
+      "zhihuKeywords": [
+        "p 值 是什么",
+        "t 检验 卡方检验"
+      ],
+      "prerequisites": [
+        "probability-basics",
+        "eda"
+      ]
+    },
+    {
+      "id": "regression",
+      "title": "回归分析",
+      "category": "stats",
+      "summary": "线性回归、多元回归与模型评估，解释变量间关系。",
+      "why": "回归是业务归因、预测与因果探索最常用的工具。",
+      "description": [
+        "线性回归用一组自变量解释连续因变量，系数表示在其他变量不变时的影响。要理解最小二乘、R²、残差诊断与多重共线性。",
+        "回归不等于因果。业务上常配合控制变量、固定效应或实验设计来逼近因果；预测场景则更关注交叉验证与泛化误差。"
+      ],
+      "purposes": [
+        "量化各因素对指标的影响",
+        "做简单的预测与打分",
+        "为归因和实验分析提供模型基础"
+      ],
+      "resources": [
+        {
+          "title": "scikit-learn 线性模型",
+          "type": "doc",
+          "url": "https://scikit-learn.org/stable/modules/linear_model.html"
+        },
+        {
+          "title": "StatQuest: Linear Regression",
+          "type": "video",
+          "url": "https://statquest.org/"
+        }
+      ],
+      "zhihuKeywords": [
+        "线性回归 系数解释",
+        "回归 因果"
+      ],
+      "prerequisites": [
+        "hypothesis-testing",
+        "pandas-dataframe"
+      ]
+    },
+    {
+      "id": "ab-testing",
+      "title": "A/B 实验",
+      "category": "stats",
+      "summary": "实验设计、样本量、显著性、辛普森悖论与上线决策。",
+      "why": "数据驱动决策的核心工具，做错比不做更危险。",
+      "description": [
+        "实验前要确定假设、主指标、护栏指标、样本量与实验周期。样本量由基线转化率、最小可检测效应和显著性水平共同决定，不能边跑边看。",
+        "实验后要检查分流是否均衡、有没有 SRM、指标是否被污染。辛普森悖论、多重比较和提前停止都会让结论失真。"
+      ],
+      "purposes": [
+        "设计一次可信的线上实验",
+        "判断实验结论能否上线",
+        "识别分流与统计陷阱"
+      ],
+      "resources": [
+        {
+          "title": "Evan Miller: A/B 工具与样本量",
+          "type": "doc",
+          "url": "https://www.evanmiller.org/ab-testing/"
+        },
+        {
+          "title": "Trustworthy Online Controlled Experiments",
+          "type": "book",
+          "url": "https://experimentguide.com/"
+        }
+      ],
+      "zhihuKeywords": [
+        "AB 测试 样本量",
+        "辛普森悖论"
+      ],
+      "prerequisites": [
+        "hypothesis-testing",
+        "business-metrics"
+      ]
+    },
+    {
+      "id": "matplotlib",
+      "title": "Matplotlib 基础",
+      "category": "viz",
+      "summary": "用 Figure / Axes 画折线、柱状、散点与子图。",
+      "why": "最底层的 Python 绘图库，其他可视化库都建立在它之上。",
+      "description": [
+        "Matplotlib 的核心是 Figure 与 Axes：一个画布可以放多个子图，每个 Axes 独立设置坐标轴、刻度、图例和标注。",
+        "要掌握颜色、线型、字体、中文显示、保存高分辨率图片。默认样式偏学术，业务汇报通常需要统一配色和字号。"
+      ],
+      "purposes": [
+        "画出分析所需的基础图表",
+        "控制子图布局与标注",
+        "为 seaborn / plotly 打基础"
+      ],
+      "resources": [
+        {
+          "title": "Matplotlib 教程",
+          "type": "doc",
+          "url": "https://matplotlib.org/stable/tutorials/index.html"
+        },
+        {
+          "title": "Matplotlib 图库",
+          "type": "doc",
+          "url": "https://matplotlib.org/stable/gallery/index.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "Matplotlib 中文乱码"
+      ],
+      "prerequisites": [
+        "pandas-series"
+      ]
+    },
+    {
+      "id": "seaborn",
+      "title": "Seaborn 统计图",
+      "category": "viz",
+      "summary": "统计图高级封装：分布、分类、回归与热力图。",
+      "why": "用更少的代码画出适合分析与汇报的统计图。",
+      "description": [
+        "Seaborn 直接接受 DataFrame，内置分布图、分类图、回归图和相关性热力图，默认配色和统计聚合更适合探索性分析。",
+        "要理解长表与宽表对绘图的影响，以及 hue、row、col 等分面参数。复杂定制仍要回到 Matplotlib 的 Axes。"
+      ],
+      "purposes": [
+        "快速画分布与相关性图",
+        "按维度分面比较指标",
+        "让探索图表达到可汇报质量"
+      ],
+      "resources": [
+        {
+          "title": "Seaborn 教程",
+          "type": "doc",
+          "url": "https://seaborn.pydata.org/tutorial.html"
+        },
+        {
+          "title": "Seaborn API",
+          "type": "doc",
+          "url": "https://seaborn.pydata.org/api.html"
+        }
+      ],
+      "zhihuKeywords": [
+        "seaborn 热力图"
+      ],
+      "prerequisites": [
+        "matplotlib",
+        "data-cleaning"
+      ]
+    },
+    {
+      "id": "plotly",
+      "title": "Plotly 交互图",
+      "category": "viz",
+      "summary": "交互式图表与网页嵌入，适合报告和看板。",
+      "why": "业务方更愿意在可缩放、可悬停的图上探索数据。",
+      "description": [
+        "Plotly 生成基于 Web 的交互图：悬停提示、缩放、图例筛选都是内置能力，可直接嵌入 HTML、Notebook 或看板。",
+        "要掌握 graph_objects 与 express 两种写法、子图与双轴、导出静态图。交互图要注意数据量与首屏性能，别把百万点直接塞进浏览器。"
+      ],
+      "purposes": [
+        "做可交互的分析报告",
+        "把图表嵌入网页或看板",
+        "让业务方自助探索数据"
+      ],
+      "resources": [
+        {
+          "title": "Plotly Python 文档",
+          "type": "doc",
+          "url": "https://plotly.com/python/"
+        },
+        {
+          "title": "Plotly Express",
+          "type": "doc",
+          "url": "https://plotly.com/python/plotly-express/"
+        }
+      ],
+      "zhihuKeywords": [
+        "plotly 交互图表"
+      ],
+      "prerequisites": [
+        "seaborn"
+      ]
+    },
+    {
+      "id": "dashboard",
+      "title": "数据看板",
+      "category": "viz",
+      "summary": "把指标、图表与筛选器组织成可复用的数据看板。",
+      "why": "分析结论要能被持续使用，而不是停在一次性报告里。",
+      "description": [
+        "看板的核心是信息层级：先给北极星指标与趋势，再给分维度拆解，最后给明细与下载。筛选器要少而关键，避免把看板做成「所有图都放上去」。",
+        "工程上要关注数据刷新频率、口径一致性、权限与加载性能。Streamlit / Dash 适合快速搭建，Metabase / Superset 适合团队自助分析。"
+      ],
+      "purposes": [
+        "把一次性分析沉淀为日常监控",
+        "让业务方自助查看核心指标",
+        "统一团队的数据口径"
+      ],
+      "resources": [
+        {
+          "title": "Streamlit 文档",
+          "type": "doc",
+          "url": "https://docs.streamlit.io/"
+        },
+        {
+          "title": "Plotly Dash 文档",
+          "type": "doc",
+          "url": "https://dash.plotly.com/"
+        }
+      ],
+      "zhihuKeywords": [
+        "数据看板 搭建"
+      ],
+      "prerequisites": [
+        "plotly",
+        "business-metrics"
+      ]
+    },
+    {
+      "id": "business-metrics",
+      "title": "业务指标体系",
+      "category": "business",
+      "summary": "DAU/MAU、留存、转化率、GMV 与北极星指标。",
+      "why": "没有统一口径，分析结论无法对齐，也无法判断优先级。",
+      "description": [
+        "指标体系通常分三层：北极星指标、一级指标（规模 / 活跃 / 留存 / 转化 / 收入）、二级拆解指标。每个指标都要有明确口径、数据源和负责人。",
+        "好指标要可行动：能被团队影响、能拆到具体环节、能稳定采集。避免「虚荣指标」，例如只看累计注册用户而不看留存。"
+      ],
+      "purposes": [
+        "定义团队统一的核心指标",
+        "把业务目标拆成可分析的口径",
+        "为实验与看板提供度量基础"
+      ],
+      "resources": [
+        {
+          "title": "Google HEART 框架",
+          "type": "paper",
+          "url": "https://research.google/pubs/pub36299/"
+        },
+        {
+          "title": "Amplitude: 产品指标指南",
+          "type": "article",
+          "url": "https://amplitude.com/blog/product-metrics"
+        }
+      ],
+      "zhihuKeywords": [
+        "北极星指标",
+        "DAU MAU 区别"
+      ],
+      "prerequisites": [
+        "sql-basics"
+      ]
+    },
+    {
+      "id": "funnel-analysis",
+      "title": "漏斗分析",
+      "category": "business",
+      "summary": "拆解用户从进入到转化的每一步，定位流失环节。",
+      "why": "增长问题往往不是「整体不行」，而是某一步转化断了。",
+      "description": [
+        "漏斗把用户路径拆成有序步骤，计算每一步的转化率与流失率。关键在口径：同一用户多次进入怎么算、步骤之间允许多长时间、是否要求严格顺序。",
+        "分析时要分渠道、分端、分新老用户拆解，避免整体漏斗掩盖结构性差异。定位到流失步骤后，再结合行为数据与访谈找原因。"
+      ],
+      "purposes": [
+        "定位转化链路中的流失点",
+        "对比不同渠道与人群的转化",
+        "为产品改版提供优先级依据"
+      ],
+      "resources": [
+        {
+          "title": "Amplitude: 漏斗分析",
+          "type": "article",
+          "url": "https://amplitude.com/blog/funnel-analysis"
+        },
+        {
+          "title": "Mixpanel: Funnels",
+          "type": "doc",
+          "url": "https://docs.mixpanel.com/docs/reports/funnels"
+        }
+      ],
+      "zhihuKeywords": [
+        "漏斗分析 怎么做"
+      ],
+      "prerequisites": [
+        "business-metrics",
+        "pandas-dataframe"
+      ]
+    },
+    {
+      "id": "cohort-retention",
+      "title": "同期群与留存",
+      "category": "business",
+      "summary": "按时间分组观察留存曲线，区分拉新与产品体验问题。",
+      "why": "整体留存会掩盖不同批次用户的差异，同期群才能看清真实趋势。",
+      "description": [
+        "同期群按首次使用时间（或首单时间）分组，观察每组在后续第 N 天的留存率。若新批次留存持续下降，问题可能在拉新质量；若所有批次都低，问题在产品价值。",
+        "留存曲线通常会趋于平台，要关注平台高度与下降速度。还要区分「回访」和「使用核心功能」，不同定义会得出完全不同的结论。"
+      ],
+      "purposes": [
+        "判断产品留存是否真的在变好",
+        "识别渠道带来的用户质量差异",
+        "为增长策略提供分群依据"
+      ],
+      "resources": [
+        {
+          "title": "Amplitude: 同期群分析",
+          "type": "article",
+          "url": "https://amplitude.com/blog/cohort-analysis"
+        },
+        {
+          "title": "Mixpanel: Retention",
+          "type": "doc",
+          "url": "https://docs.mixpanel.com/docs/reports/retention"
+        }
+      ],
+      "zhihuKeywords": [
+        "留存曲线 分析"
+      ],
+      "prerequisites": [
+        "funnel-analysis",
+        "sql-joins"
+      ]
+    },
+    {
+      "id": "attribution",
+      "title": "渠道归因",
+      "category": "business",
+      "summary": "首次/末次/线性归因，评估渠道对转化的真实贡献。",
+      "why": "预算分配需要知道每个渠道到底带来了多少转化。",
+      "description": [
+        "归因模型决定功劳怎么分：首次点击奖励拉新、末次点击奖励临门一脚、线性归因平均分配、数据驱动模型按贡献度分配。模型不同，结论可能完全相反。",
+        "归因数据依赖埋点与渠道标识，跨设备、跨域、自然流量都会造成缺口。做预算决策时最好结合增量实验，而不是只看归因报表。"
+      ],
+      "purposes": [
+        "评估各投放渠道的转化贡献",
+        "为预算分配提供依据",
+        "识别归因模型带来的偏差"
+      ],
+      "resources": [
+        {
+          "title": "Google Analytics: 归因",
+          "type": "doc",
+          "url": "https://support.google.com/analytics/answer/10596866"
+        },
+        {
+          "title": "Amplitude: 归因分析",
+          "type": "article",
+          "url": "https://amplitude.com/blog/marketing-attribution"
+        }
+      ],
+      "zhihuKeywords": [
+        "渠道归因 模型"
+      ],
+      "prerequisites": [
+        "funnel-analysis",
+        "sql-joins"
+      ]
+    }
+  ]
+}

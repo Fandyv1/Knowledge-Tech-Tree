@@ -104,7 +104,8 @@ function orderCategories(goal: LearningGoal): Category[] {
   }
 
   const ids = categories.map((category) => category.id);
-  if (ids.length > 7) return categories;
+  // 8 个类别时全排列为 8! = 40320，仍然可以在首屏算完；更多类别退回声明顺序
+  if (ids.length > 8) return categories;
 
   const costOf = (order: string[]): number => {
     const position = new Map(order.map((id, i) => [id, i]));
@@ -162,6 +163,8 @@ interface Placement {
   angle: number;
   radius: number;
   ring: number;
+  minAngle: number;
+  maxAngle: number;
 }
 
 function computeLayout(goal: LearningGoal): LayoutResult {
@@ -275,6 +278,8 @@ function computeLayout(goal: LearningGoal): LayoutResult {
             angle,
             radius,
             ring,
+            minAngle: sector.start + 0.03,
+            maxAngle: sector.end - 0.03,
           });
         }
 
@@ -284,8 +289,55 @@ function computeLayout(goal: LearningGoal): LayoutResult {
     }
   }
 
+  // 标签盒子固定 150×36，挂在星点下方 45px。
+  // 角度容量只能保证同轨不撞，跨轨仍可能重叠，这里用迭代微调角度做二次消解。
+  const LABEL_WIDTH = 150;
+  const LABEL_HEIGHT = 36;
+  const LABEL_OFFSET_Y = 45;
+  const placedList = [...placements.values()];
+
+  for (let iter = 0; iter < 240; iter += 1) {
+    let moved = false;
+
+    for (let i = 0; i < placedList.length; i += 1) {
+      for (let j = i + 1; j < placedList.length; j += 1) {
+        const a = placedList[i];
+        const b = placedList[j];
+        const overlapX = LABEL_WIDTH - Math.abs(a.cx - b.cx);
+        const overlapY =
+          LABEL_HEIGHT - Math.abs(
+            a.cy + LABEL_OFFSET_Y - (b.cy + LABEL_OFFSET_Y),
+          );
+        if (overlapX <= 0 || overlapY <= 0) continue;
+
+        moved = true;
+        const lower = a.angle <= b.angle ? a : b;
+        const upper = lower === a ? b : a;
+        const step = Math.min(0.05, 0.004 + overlapX / 8000);
+        const before = lower.angle + upper.angle;
+        lower.angle = Math.max(lower.minAngle, lower.angle - step);
+        upper.angle = Math.min(upper.maxAngle, upper.angle + step);
+
+        if (lower.angle + upper.angle === before && overlapY > 2) {
+          // 两边都贴到扇区边界时，仍然向外推一格，避免死锁
+          const target = a.radius >= b.radius ? a : b;
+          target.radius += 6;
+          target.ring = Math.round((target.radius - R0) / R_STEP);
+        }
+
+        for (const item of [lower, upper]) {
+          item.cx = Math.cos(item.angle) * item.radius;
+          item.cy = Math.sin(item.angle) * item.radius;
+        }
+      }
+    }
+
+    if (!moved) break;
+  }
+
   const maxRadius = Math.max(
-    ...goal.nodes.map((node) => placements.get(node.id)?.radius ?? R0),
+    R0,
+    ...[...placements.values()].map((placement) => placement.radius),
   );
   const maxRing = Math.max(
     0,

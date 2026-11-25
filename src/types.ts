@@ -1,10 +1,8 @@
-export type CategoryId =
-  | 'math'
-  | 'programming'
-  | 'ml'
-  | 'llm-core'
-  | 'engineering'
-  | 'practice';
+/**
+ * 类别 id 由各学习目标的 JSON 自行声明（如 math、multimodal、py-basics）。
+ * 这里放宽为 string，由运行时校验保证节点引用的类别一定存在。
+ */
+export type CategoryId = string;
 
 export interface Category {
   id: CategoryId;

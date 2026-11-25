@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { LearningGoal } from '../types';
 import { goals } from '../data/goals';
 import { useAnalysisMachine } from '../hooks/useAnalysisMachine';
-import SearchBox, { EXAMPLES } from '../components/SearchBox';
+import SearchBox from '../components/SearchBox';
 import AnalysisProgress from '../components/AnalysisProgress';
 import NoMatchHint from '../components/NoMatchHint';
 
@@ -26,12 +26,18 @@ export default function HomePage() {
   const activeIndex = state.phase === 'analyzing' ? state.stepIndex : -1;
 
   const primary = goals[0];
-  const starCount = primary?.nodes.length ?? 0;
-  const linkCount =
-    primary?.nodes.reduce(
-      (total, node) => total + node.prerequisites.length,
-      0,
-    ) ?? 0;
+  const fallbackTitle = primary?.title ?? 'AI 大模型';
+  const examples = goals.map((goal) => goal.title);
+  const starCount = goals.reduce((sum, goal) => sum + goal.nodes.length, 0);
+  const linkCount = goals.reduce(
+    (sum, goal) =>
+      sum +
+      goal.nodes.reduce(
+        (total, node) => total + node.prerequisites.length,
+        0,
+      ),
+    0,
+  );
 
   return (
     <main className="relative flex min-h-full flex-col overflow-hidden">
@@ -88,15 +94,16 @@ export default function HomePage() {
                   shakeToken={state.phase === 'idle' ? state.shakeToken : 0}
                   onChange={onChange}
                   onSubmit={onSubmit}
+                  examples={examples}
                 />
               </div>
 
               {state.phase === 'noMatch' && (
                 <NoMatchHint
                   attempted={state.attempted}
-                  exampleLabel={primary?.title ?? EXAMPLES[0]}
+                  exampleLabel={fallbackTitle}
                   onPickExample={() => {
-                    const example = primary?.title ?? EXAMPLES[0];
+                    const example = fallbackTitle;
                     onChange(example);
                     onSubmit(example);
                   }}

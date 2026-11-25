@@ -6,6 +6,8 @@ Help people who want to learn knowledge better understand what they should study
 
 输入「想学什么」，网页分析后渲染出一张可交互的知识点星图：缩放平移浏览、悬停看档案、点击进详情、从详情跳转知乎搜索。
 
+内置三张星图：**AI 大模型**、**Python 数据分析**、**考研数学**，各 24 个知识点。
+
 > **演示版本说明**：所谓「分析」是**纯前端本地模拟** —— 对输入做归一化与关键词打分匹配，命中内置知识库后播放一段分步骤进度动画，文案中的数字由数据实时计算。**全程不调用任何大模型或后端 API。**
 
 ---
@@ -38,6 +40,7 @@ npm test          # 运行单元测试（Vitest）
 | 图可视化 | @xyflow/react（React Flow v13） |
 | 排布 | 自研「类别扇形 × 同心轨道」径向布局（思路参考 [math-tree](https://github.com/wizarot/math-tree)） |
 | 样式 | Tailwind CSS 3.4 + 少量原生 CSS（承载动画与类别动态配色） |
+| 数据 | `src/data/goals/*.json`，构建期 import，无后端请求 |
 | 测试 | Vitest |
 
 数据全部静态内置，无后端、无数据库、无 LLM 调用。
@@ -117,37 +120,51 @@ leaving ──(effect)──▶ navigate('/tree/:id', { state: { fromSearch: tru
 
 ## 数据模型与校验
 
-类型定义见 `src/types.ts`。数据位于 `src/data/goals.ts`，按领域拆分到 `src/data/nodes/*.ts` 便于维护。
+类型定义见 `src/types.ts`；节点数据统一放在 `src/data/goals/*.json`，由 `src/data/goals/index.ts` 在**构建期 import**。仍然是纯静态站点，不产生额外请求。
 
-内置的 **AI 大模型** 目标包含 **20 个知识点、27 条依赖关系、6 个类别、8 层依赖结构**。
+| 文件 | 目标 | 规模 |
+| --- | --- | --- |
+| `ai-llm.json` | AI 大模型 | 24 节点 / 8 类别 / 36 条依赖 |
+| `python-data.json` | Python 数据分析 | 24 节点 / 5 类别 / 33 条依赖 |
+| `math-exam.json` | 考研数学 | 24 节点 / 5 类别 / 38 条依赖 |
 
-`src/lib/validate.ts` 在开发期（`import.meta.env.DEV`）自动校验三件事，失败即抛错，错误会直接出现在控制台：
+每个 JSON 就是一个完整的 `LearningGoal`：`id`、`title`、`subtitle`、`aliases`、`searchHints`、`categories`、`nodes`。节点内部只存 `prerequisites: string[]`，后继、祖先、深度、边数都由 `buildGraphIndex` 在运行时派生，不存在单独的 edges 文件。
 
-1. 节点 id 全局唯一
-2. 所有 `prerequisites` 引用的 id 都存在
-3. 依赖图无环（DFS 三色标记，报错时打印环路径如 `a → b → c → a`）
+`src/lib/validate.ts` 在开发期（`import.meta.env.DEV`）自动校验，失败即抛错，错误直接出现在控制台：
+
+1. 学习目标 id、类别 id、节点 id 唯一
+2. 节点的 `category` 必须在 `categories` 中声明
+3. 所有 `prerequisites` 引用的 id 都存在
+4. 素材 `type` 只能是 article / video / course / book / doc / paper
+5. 依赖图无环（DFS 三色标记，报错时打印环路径如 `a → b → c → a`）
 
 生产构建会把这段校验 tree-shake 掉。
 
-### 如何新增一个学习目标
+### 如何新增知识点
 
-1. 在 `src/data/nodes/` 下新建节点数据文件，按 `KnowledgeNode` 接口填写。每个节点需要：
-   - `summary`（≤50 字，悬浮卡片「这是什么」）
-   - `why`（≤40 字，悬浮卡片「为什么学」）
+1. 打开对应 `src/data/goals/<goal>.json`，在 `nodes` 末尾追加一个对象：
+   - `summary`（≤50 字，档案卡「这是什么」）
+   - `why`（≤40 字，档案卡「为什么学」）
    - `description`（2–4 段，详情页概述）
    - `purposes`（3–6 条）、`resources`（2–5 条）、`zhihuKeywords`（1–3 个）
    - `prerequisites`（前置节点 id，空数组表示起点）
-2. 在 `src/data/goals.ts` 中组装一个 `LearningGoal`，填好 `id`（将成为路由参数）、`title`、`subtitle`、`categories`。
-3. 把该 goal 加入导出的 `goals` 数组。
+2. `category` 必须能在同文件的 `categories` 里找到；需要新类别时，在 `categories` 里补 `id / name / color / colorSoft`。
+3. 保存即生效：搜索匹配、径向布局、图例计数、分析步骤文案全部由数据驱动。
 
-**完成即生效** —— 搜索匹配、布局、图例、分析步骤文案全部由数据驱动，无需改动任何组件。`aliases` 里写上用户可能的说法即可被搜到。
+### 如何新增一个学习目标
+
+1. 新建 `src/data/goals/<id>.json`，结构照抄任意现有文件，替换 `id`、标题、别名、类别与节点。
+2. 在 `src/data/goals/index.ts` 里 import 该 JSON，并加入 `goals` 数组。
+3. `aliases` 写全用户可能的说法（例如「数据分析」「pandas」「考研数一」），首页示例 chips 会自动展示所有目标标题。
+
+**切换目标**：首页搜索目标标题/别名，或直接访问 `/tree/<goalId>`，例如 `/tree/python-data`、`/tree/math-exam`。
 
 ### 如何替换为真实后端 / LLM
 
 当前架构的单向依赖是 `data → lib → components → pages`，替换只需动最底两层：
 
 - **换匹配逻辑**：把 `matchGoal` 改为调用后端语义检索接口。由于它是纯函数且只在状态机一处被调用，改成异步时只需在 `useAnalysisMachine` 的 `SUBMIT` 分支加 `await`。
-- **换数据来源**：把 `goals.ts` 的静态导出改为异步加载（fetch / React Query），并在加载态渲染骨架屏。`types.ts` 的接口即为前后端数据契约。
+- **换数据来源**：把 `src/data/goals/index.ts` 里的 JSON import 改为异步加载（fetch / React Query），并在加载态渲染骨架屏。`types.ts` 的接口即为前后端数据契约。
 - **换分析过程**：`analyzeSteps.ts` 目前返回固定步骤，可改为订阅后端的流式进度事件（SSE），`AnalysisProgress` 组件的 props 接口无需变化。
 
 UI 组件层完全不需要改动。
@@ -176,7 +193,7 @@ UI 组件层完全不需要改动。
 | 中继星 relay | 有前置且有后继（枢纽） | 8.5px | 中等四芒星 |
 | 末端星 terminal | 无后继（终点） | 6px | 小四芒星 |
 
-当前数据下为 **4 主星 + 11 中继星 + 5 末端星**。四芒星由单条 SVG 路径绘制（尖点 ±50、弧边内凹），光晕是径向渐变层而非 `filter: blur()`，20 个节点同时缩放仍然流畅。星点颜色取自类别色；高亮时叠加 `drop-shadow`，未命中时整体降到 0.3 透明度。
+主星 / 中继星 / 末端星由依赖关系自动判定（三张图合计 **72 个节点**）。四芒星由单条 SVG 路径绘制（尖点 ±50、弧边内凹），光晕是径向渐变层而非 `filter: blur()`，全图同时缩放仍然流畅。星点颜色取自类别色；高亮时叠加 `drop-shadow`，未命中时整体降到 0.3 透明度。
 
 窄屏下星点的元数据行（类别 · MAG）会隐藏，避免远景糊成一团。
 
@@ -193,7 +210,7 @@ UI 组件层完全不需要改动。
 
 排布思路参考 [wizarot/math-tree](https://github.com/wizarot/math-tree) 的径向星图：中心是原点，类别是扇形射线，越靠外代表依赖越深。
 
-1. **类别排序**：把 6 个类别看成一个环，穷举全排列（≤7 类时最多 5040 种），按「跨类别连线的环形距离」打分，把交互最多的类别放在相邻扇形，减少横穿圆心的长线。最终从「数学基础」开始顺时针展开。
+1. **类别排序**：把每个目标的 5–8 个类别看成一个环，穷举全排列（≤8 类时最多 40320 种），按「跨类别连线的环形距离」打分，把交互最多的类别放在相邻扇形，减少横穿圆心的长线。存在「数学基础」类别时从正上方开始顺时针展开。
 2. **扇形宽度**：按类别节点数开平方加权，避免 9 个节点的大类吃掉整个圆；每个扇形的可用张角再乘 0.72，留出扇区之间的呼吸位。
 3. **半径 = 依赖深度**：节点按深度分层，半径 `R0 + ring × 60`；同一深度组内按半径递增，保证依赖始终向外。
 4. **轨道容量**：每条轨道能放几个节点由弧长 ÷ 标签宽度决定，放不下就溢出到下一圈；只有 1 个节点的轨道在扇形内左右交错，形成星座折线，避免标签排成一条直线。
@@ -283,13 +300,11 @@ npm run build && cp dist/index.html dist/404.html
 src/
 ├── types.ts                      数据契约
 ├── data/
-│   ├── goals.ts                  LearningGoal[] 组装 + 开发期校验
-│   └── nodes/                    按领域拆分的节点数据
-│       ├── foundation.ts         数学与编程基础（4）
-│       ├── machine-learning.ts   机器学习与框架（3）
-│       ├── llm-architecture.ts   架构与预训练（4）
-│       ├── llm-application.ts    对齐与应用（5）
-│       └── engineering.ts        工程化与实践（4）
+│   └── goals/                    每张星图一个 JSON
+│       ├── ai-llm.json           AI 大模型（24 节点 / 8 类别）
+│       ├── python-data.json      Python 数据分析（24 节点 / 5 类别）
+│       ├── math-exam.json        考研数学（24 节点 / 5 类别）
+│       └── index.ts              构建期 import + 开发期校验 + 查找函数
 ├── lib/                          纯函数层，不 import React
 │   ├── matchGoal.ts              归一化 + 打分匹配
 │   ├── analyzeSteps.ts           步骤文案 + 时长序列
@@ -338,12 +353,13 @@ export const zhihuSearchUrl = (kw: string) =>
 
 ## 已知边界
 
-- 知识库只内置 **AI 大模型** 一个目标。输入其他内容会走「未命中 → 引导到示例目标」分支，**不会为其他方向伪造科技树数据**。
+- 知识库内置 **AI 大模型 / Python 数据分析 / 考研数学** 三个目标。输入其他内容会走「未命中 → 引导到示例目标」分支，**不会为其他方向伪造科技树数据**。
+- 节点数据在构建期打进 bundle，改 JSON 后需要重新构建；如需部署后热改数据，要改成运行时 fetch。
 - 节点的 `resources` 外链指向官方文档、经典课程与 arXiv 论文等稳定来源，但第三方链接的长期可用性不在本项目控制范围内。
 - React Flow 画布右下角保留官方归属水印（`hideAttribution` 按其许可条款仅供订阅用户使用）。
 - 径向排布以类别分扇形，跨类别的长依赖仍是直线弦，会从圆盘中部穿过（中心罗盘已做遮挡）；节点数更多的目标需要重新评估轨道容量。
 - 窄屏首屏采用以罗盘为中心的局部视图，四周星点需要平移浏览；点击「适应画布」可看全景，但此时标签会很小。
-- 未实现：浅色主题切换（当前仅星图暗场主题）、节点拖拽位置持久化、多目标切换、「已学会」进度标记。
+- 未实现：浅色主题切换（当前仅星图暗场主题）、节点拖拽位置持久化、画布内的目标切换器（目前靠首页搜索或直接访问 `/tree/<goalId>`）、「已学会」进度标记。
 
 ## License
 

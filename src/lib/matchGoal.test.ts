@@ -61,6 +61,17 @@ describe('matchGoal', () => {
     },
   );
 
+  it.each([
+    ['Python 数据分析', 'python-data'],
+    ['pandas', 'python-data'],
+    ['数据分析', 'python-data'],
+    ['考研数学', 'math-exam'],
+    ['高数', 'math-exam'],
+    ['数一', 'math-exam'],
+  ])('「%s」应命中 %s', (input, goalId) => {
+    expect(matchGoal(input, goals)?.id).toBe(goalId);
+  });
+
   it.each(['如何做红烧肉', '摄影构图', '', '   '])(
     '「%s」应返回 null',
     (input) => {
